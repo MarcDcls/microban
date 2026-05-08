@@ -1,5 +1,7 @@
 # Microban: A Small, Fully Open-Source Humanoid Robot
 
+[![License: CERN-OHL-S-2.0](https://img.shields.io/badge/Hardware-CERN--OHL--S--2.0-blue.svg)](LICENSE)
+
 ![Microban Prototype](link-to-a-cool-picture-of-your-robot.jpg) 
 *(Note: Replace this with a good quality photo or GIF of Microban in action)*
 
@@ -23,8 +25,7 @@ Aside from the motors and a few standard, easily sourced hardware components, **
 ## 📁 Repository Structure
 
 *   `/STL` — Contains all the 3D files ready to be sliced and printed.
-*   `/CAD` — (Optional) Contains the source CAD files (e.g., STEP or Fusion360 files) for easy modification.
-*   `/Docs` — Assembly guides, diagrams, and additional documentation.
+*   `/STEP` — Contains the source STEP files for easy modification.
 
 ---
 
@@ -34,14 +35,20 @@ To keep this project highly accessible, Microban relies on common hardware. Here
 
 | Component | Quantity | Description / Notes |
 | :--- | :---: | :--- |
-| **3D Printed Parts** | 1 Set | Check the `/STL` folder. Recommended material: PLA or PETG. |
-| **Servo Motors** | X | *[e.g., MG996R or SG90, specify the exact model]* |
-| **Microcontroller**| 1 | *[e.g., Arduino Nano, ESP32, Raspberry Pi Pico]* |
-| **Power Supply** | 1 | *[e.g., 2S LiPo Battery or standard 5V/6V power adapter]* |
-| **M3 Screws & Nuts**| ~XX | Standard M3 hardware for assembly. |
-| **Bearings** *(if any)*| X | *[e.g., 608ZZ standard skate bearings]* |
+| **3D Printed Parts** | X | Check the `/STL` folder. Recommended material is PLA. |
+| **Servo Motors** | 19 | XL330-M288-T from Dynamixel. |
+| **Microcontroller**| 1 | Raspberry Pi Zero 2W. |
+| **Board Hat** | 1 | X |
+| **Power Supply** | 2 | 18650 Lithium-ion Batteries. |
+| **Battery Holder** | 1 | 2x18650 Battery Holder. |
+| **USB-C Charger** | 1 | Standard USB-C charger. |
+| **BMS** | 1 | Battery Management System for 2x18650 batteries. |
+| **M2x6 Plastic Screws**| ~X | Standard plastic screws for assembly. Recommended model is STP39. |
+| **M2.2x8 Plastic Screws**| ~X | Standard plastic screws for assembly. Recommended model is STP39. |
+| **20x30x0.3 Steel Shims** | 8 | X |
+| **20x30x1 POM Shims** | 4 | X |
 
-*(A full, detailed BOM with links to purchase components will be available in the [Wiki/Docs section].)*
+*(A full, detailed BOM with links to purchase components will be available in the the future.)*
 
 ---
 
@@ -66,7 +73,7 @@ Feel free to fork the repository, make your changes, and submit a Pull Request. 
 
 ## 📄 License
 
-This project is licensed under the **[Insert License Name, e.g., MIT, GNU GPLv3, or Creative Commons BY-SA 4.0]** License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the **CERN-OHL-S-2.0** License - see the [LICENSE](LICENSE) file for details.
 
 
 ## Sources
