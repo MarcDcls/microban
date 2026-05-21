@@ -1,0 +1,2 @@
+- Installation de uv
+- Ajout de rustypot
