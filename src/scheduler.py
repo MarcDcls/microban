@@ -7,7 +7,7 @@ from constants import motor_id, motor_sign
 from battery import BATTERY_WARN_V, BATTERY_CRITICAL_V, BATTERY_PROBE_IDS
 from observer import Observer, Observation
 from input.input_source import InputSource, UserInput
-from moves.move import MotorCommand, Move
+from moves.move import MotorCommand, Move, MoveState
 from moves.rotate_head import RotateHeadMove
 from moves.walk import WalkMove
 
@@ -67,11 +67,22 @@ class Scheduler:
                 user_input = self.input_source.read() if self.input_source else UserInput()
                 obs = Observation(robot_state=robot_state, user_input=user_input)
 
-                # Build command: only active moves contribute
+                # Update move states and dispatch one call per move per tick
                 command = MotorCommand()
                 for name, move in self.registered_moves.items():
-                    if name in obs.user_input.active_moves:
-                        move.apply(obs, command)
+                    in_active = name in obs.user_input.active_moves
+
+                    if in_active and move.state == MoveState.INACTIVE:
+                        move.state = MoveState.STARTING
+                    elif not in_active and move.state in (MoveState.STARTING, MoveState.ACTIVE):
+                        move.state = MoveState.STOPPING
+
+                    if move.state == MoveState.STARTING:
+                        move.on_start(obs, command)
+                    elif move.state == MoveState.ACTIVE:
+                        move.step(obs, command)
+                    elif move.state == MoveState.STOPPING:
+                        move.on_stop(obs, command)
 
                 # Send command to motors
                 self._send_to_motors(command)

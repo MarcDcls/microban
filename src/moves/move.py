@@ -1,18 +1,45 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
+from enum import Enum, auto
+
 from observer import Observation
+from constants import neutral_pose
+
+
+class MoveState(Enum):
+    INACTIVE = auto()
+    STARTING = auto()
+    ACTIVE = auto()
+    STOPPING = auto()
 
 
 @dataclass
 class MotorCommand:
-    """Final motor command built by the scheduler pipeline."""
+    """
+    Final motor command built by the scheduler pipeline.
+    
+    Initialized with the neutral pose.
+    """
 
-    target_angles: dict[str, float] = field(default_factory=dict)
+    target_angles: dict[str, float] = field(default_factory=lambda: dict(neutral_pose))
 
 
 class Move(ABC):
     """Base class for all motion behaviors."""
 
+    def __init__(self) -> None:
+        self.state: MoveState = MoveState.INACTIVE
+
+    def on_start(self, obs: Observation, command: MotorCommand) -> None:
+        """Called each tick while state is STARTING.
+        Must set self.state = MoveState.ACTIVE when the transition is done."""
+        self.state = MoveState.ACTIVE
+
     @abstractmethod
-    def apply(self, obs: Observation, command: MotorCommand) -> None:
-        """Read the observation and update the motor command in place."""
+    def step(self, obs: Observation, command: MotorCommand) -> None:
+        """Called each tick while state is ACTIVE."""
+
+    def on_stop(self, obs: Observation, command: MotorCommand) -> None:
+        """Called each tick while state is STOPPING.
+        Must set self.state = MoveState.INACTIVE when the transition is done."""
+        self.state = MoveState.INACTIVE

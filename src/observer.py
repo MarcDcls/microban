@@ -33,7 +33,8 @@ class Observer:
         state = RobotState(time_s=time.perf_counter())
 
         for motor_name, motor_id in self.motor_name_to_id.items():
-            state.motor_angles[motor_name] = self.controller.read_present_position(motor_id)
+            raw = self.controller.read_present_position(motor_id)
+            state.motor_angles[motor_name] = raw[0] if isinstance(raw, (list, tuple)) else float(raw)
 
         return state
 

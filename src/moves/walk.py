@@ -8,7 +8,7 @@ class WalkMove(Move):
     """Walk using a RL policy trained in simulation."""
 
     def __init__(self) -> None:
-        pass
+        super().__init__()
 
-    def apply(self, obs: Observation, command: MotorCommand) -> None:
+    def step(self, obs: Observation, command: MotorCommand) -> None:
         pass
