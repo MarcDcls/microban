@@ -1,5 +1,7 @@
 .PHONY: sync setup run stop battery
 
+HOST ?= microban
+
 sync:
 	rsync -avz \
 		--exclude='.git' \
@@ -7,16 +9,16 @@ sync:
 		--exclude='__pycache__' \
 		--exclude='cad' \
 		--exclude='docs' \
-		./ microban:microban
+		./ $(HOST):microban
 
 setup: sync
-	ssh microban "bash -l -c 'cd microban && uv sync'"
+	ssh $(HOST) "bash -l -c 'cd microban && uv sync'"
 
 run: sync
-	ssh -tt microban "bash -l -c 'cd microban && uv run src/main.py'"
+	ssh -tt $(HOST) "bash -l -c 'cd microban && uv run src/main.py'"
 
 stop:
-	ssh -tt microban "bash -l -c 'cd microban && uv run src/stop.py'"
+	ssh -tt $(HOST) "bash -l -c 'cd microban && uv run src/stop.py'"
 
 battery: sync
-	ssh microban "bash -l -c 'cd microban && uv run src/battery.py'"
+	ssh $(HOST) "bash -l -c 'cd microban && uv run src/battery.py'"
