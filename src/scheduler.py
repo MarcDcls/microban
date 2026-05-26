@@ -20,6 +20,7 @@ class Scheduler:
         controller: ControllerProtocol = None,
         stop_flag_path: str = "/tmp/microban_scheduler.stop",
         input_source: Optional[InputSource] = None,
+        moves: Optional[dict[str, Move]] = None,
     ):
         self.dt = 1.0 / frequency_hz
         self.controller = controller
@@ -30,7 +31,7 @@ class Scheduler:
         self.observer = Observer(self.controller)
 
         # All moves are registered here. They only run when activated via user_input.active_moves.
-        self.registered_moves: dict[str, Move] = {
+        self.registered_moves: dict[str, Move] = moves if moves is not None else {
             "head": RotateHeadMove(),
             "squat": SquatMove(),
             "walk": WalkMove(),

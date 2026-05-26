@@ -7,6 +7,9 @@ from constants import MOTOR_ID, NEUTRAL_POSE
 from robot_controller import RobotController
 from scheduler import Scheduler
 from input.keyboard_input import KeyboardInputSource
+from moves.rotate_head import RotateHeadMove
+from moves.squat import SquatMove
+from moves.walk import WalkMove
 
 PID_FILE = Path("/tmp/microban_scheduler.pid")
 
@@ -37,6 +40,7 @@ def main() -> None:
     controller = RobotController()
     motor_ids = list(MOTOR_ID.values())
     controller.sync_write_torque_enable(motor_ids, [True] * len(motor_ids))
+    print(controller.sync_read_kp(motor_ids))
 
     try:
         ramp_to_neutral(controller)
@@ -46,6 +50,11 @@ def main() -> None:
             frequency_hz=50.0,
             controller=controller,
             input_source=KeyboardInputSource(move_keys={"h": "head", "w": "walk"}),
+            moves={
+                "head": RotateHeadMove(),
+                "squat": SquatMove(),
+                "walk": WalkMove(controller=controller),
+            },
         )
         scheduler.run()
     finally:

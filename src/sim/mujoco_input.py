@@ -33,6 +33,11 @@ class MuJoCoInputSource(InputSource):
         self._stop_flag_path = Path(stop_flag_path)
         self._state = UserInput()
         self._lock = threading.Lock()
+        self._reset_requested = threading.Event()
+
+    def consume_reset(self) -> bool:
+        """Return True (and clear the flag) if a reset was requested since last call."""
+        return self._reset_requested.is_set() and not self._reset_requested.clear() or False
 
     def start(self) -> None:
         print("MuJoCo viewer keyboard controls:")
@@ -40,6 +45,7 @@ class MuJoCoInputSource(InputSource):
             print(f"  [{char}]      toggle move '{name}'")
         print("  [arrows]  vx (up/down), vtheta (left/right)")
         print("  [x]       reset velocity")
+        print("  [r]       reset robot to initial pose")
         print("  [q]       quit")
 
     def stop(self) -> None:
@@ -67,6 +73,10 @@ class MuJoCoInputSource(InputSource):
             with self._lock:
                 self._state.velocity = {"vx": 0.0, "vy": 0.0, "vtheta": 0.0}
             print("Velocity reset to zero")
+
+        elif keycode == ord("R"):
+            self._reset_requested.set()
+            print("Robot reset to initial pose")
 
         elif keycode == ord("Q"):
             self._stop_flag_path.write_text("stop\n", encoding="ascii")

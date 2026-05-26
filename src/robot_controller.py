@@ -4,7 +4,7 @@ from constants import MOTOR_ID, MOTOR_SIGN
 
 
 class RobotController:
-    """Wraps Xl330PyController and centralises all MOTOR_SIGN conversions."""
+    """Wraps Xl330PyController."""
 
     def __init__(self, serial_port: str = "/dev/ttyAMA0", baudrate: int = 1_000_000, timeout: float = 0.1) -> None:
         self._controller = Xl330PyController(serial_port=serial_port, baudrate=baudrate, timeout=timeout)
@@ -32,3 +32,9 @@ class RobotController:
     def read_present_input_voltage(self, motor_id: int) -> float:
         raw = self._controller.read_present_input_voltage(motor_id)
         return raw[0] if isinstance(raw, (list, tuple)) else float(raw)
+
+    def sync_read_kp(self, ids: list[int]) -> list[int]:
+        return [int(v) for v in self._controller.sync_read_position_p_gain(ids)]
+
+    def sync_write_kp(self, ids: list[int], gains: list[int]) -> None:
+        self._controller.sync_write_position_p_gain(ids, gains)

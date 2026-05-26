@@ -65,3 +65,7 @@ MOTOR_SIGN = {
     "right_elbow": -1.0,
     "head": 1.0,
 }
+
+# Position P Gain (Dynamixel register value)
+KP_DEFAULT: int = 400  # ~1.38 Nm/rad
+KP_RL: int = 125       # ~0.43 Nm/rad

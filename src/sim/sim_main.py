@@ -11,6 +11,9 @@ import argparse
 from scheduler import Scheduler
 from sim.mujoco_input import MuJoCoInputSource
 from sim.mujoco_controller import MuJoCoController
+from moves.rotate_head import RotateHeadMove
+from moves.squat import SquatMove
+from moves.walk import WalkMove
 
 
 def main() -> None:
@@ -20,11 +23,24 @@ def main() -> None:
     args = parser.parse_args()
 
     input_source = MuJoCoInputSource(move_keys={"h": "head", "w": "walk"})
-    controller = MuJoCoController(args.mjcf, key_callback=input_source.key_callback)
+    controller = MuJoCoController(
+        args.mjcf,
+        key_callback=input_source.key_callback,
+        reset_source=input_source,
+    )
 
     scheduler = Scheduler(
         frequency_hz=args.hz,
         controller=controller,
         input_source=input_source,
+        moves={
+            "head": RotateHeadMove(),
+            "squat": SquatMove(),
+            "walk": WalkMove(controller=controller),
+        },
     )
     scheduler.run()
+
+
+if __name__ == "__main__":
+    main()

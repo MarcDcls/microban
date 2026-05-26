@@ -26,4 +26,4 @@ battery: sync
 	ssh $(HOST) "bash -l -c 'cd microban && uv run src/battery.py'"
 
 sim:
-	uv run --group sim src/sim/sim_main.py --mjcf $(MJCF)
+	PYTHONPATH=src uv run --group sim src/sim/sim_main.py --mjcf $(MJCF)
