@@ -57,7 +57,7 @@ Host microban-ext
     User <USERNAME>
 ```
 
-To find the IP address of your robot, you can check the connected devices on your phone's Wi-Fi settings or use a network scanning tool such as `nmap` or `arp-scan`. The user name is the one you set up when you first booted the robot (cf. [Installation Guide](install.md)).
+To find the IP address of your robot, you can check the connected devices on your phone's Wi-Fi settings or use a network scanning tool such as `nmap` or `arp-scan` (`sudo arp-scan --local`). The user name is the one you set up when you first booted the robot (cf. [Installation Guide](install.md)).
 
 Once the SSH config is updated, you can connect to the robot using the following command:
 
@@ -65,7 +65,7 @@ Once the SSH config is updated, you can connect to the robot using the following
 ssh microban-ext
 ```
 
-And add `HOST=microban-ext` to the same commands you would normally use to control the robot locally, such as `make run` or `make battery`. You can also set the `HOST` environment variable globally in your terminal session to avoid having to specify it for each command:
+And add `HOST=microban-ext` to the same commands you would normally use to control the robot locally. You can also set the `HOST` environment variable globally in your terminal session to avoid having to specify it for each command:
 
 ```
 export HOST=microban-ext
