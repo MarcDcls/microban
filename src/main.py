@@ -8,6 +8,7 @@ from robot_controller import RobotController
 from scheduler import Scheduler
 from input.keyboard_input import KeyboardInputSource
 from moves.rotate_head import RotateHeadMove
+from moves.squat import SquatMove
 from moves.walk import WalkMove
 
 PID_FILE = Path("/tmp/microban_scheduler.pid")
@@ -39,7 +40,6 @@ def main() -> None:
     controller = RobotController()
     motor_ids = list(MOTOR_TO_ID.values())
     controller.sync_write_torque_enable(motor_ids, [True] * len(motor_ids))
-    print(controller.sync_read_kp(motor_ids))
 
     try:
         ramp_to_neutral(controller)
@@ -48,9 +48,10 @@ def main() -> None:
         scheduler = Scheduler(
             frequency_hz=50.0,
             controller=controller,
-            input_source=KeyboardInputSource(move_keys={"h": "head", "w": "walk"}),
+            input_source=KeyboardInputSource(move_keys={"h": "head", "s": "squat", "w": "walk"}),
             moves={
                 "head": RotateHeadMove(),
+                "squat": SquatMove(model_path="model"),
                 "walk": WalkMove(controller=controller),
             },
         )

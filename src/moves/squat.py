@@ -31,6 +31,7 @@ class SquatMove(Move):
         lerp_duration: float = 1.0,
     ) -> None:
         super().__init__()
+        self._model_path = model_path
         self.frequency = frequency
         self.amplitude = amplitude
         self.lerp_duration = lerp_duration
@@ -41,23 +42,27 @@ class SquatMove(Move):
         self._stop_lerp_angles: list[float] = []
         self._active_start_time_s: float = 0.0
 
-        self._robot = placo.RobotWrapper(model_path, placo.Flags.mjcf)
+        self._placo_ready = False
+
+    def _initialize(self) -> None:
+        """Lazy initialization of placo model and IK solver (deferred to first activation)."""
+        if self._placo_ready:
+            return
+
+        self._robot = placo.RobotWrapper(self._model_path, placo.Flags.mjcf)
         self._solver = placo.KinematicsSolver(self._robot)
 
-        # Set the robot to the neutral pose
         for name, angle in NEUTRAL_POSE.items():
             self._robot.set_joint(name, angle)
-        T_left_foot = np.eye(4)
-        self._T_left_foot = T_left_foot
-        self._robot.set_T_world_frame("left_foot", T_left_foot)
+        self._T_left_foot = np.eye(4)
+        self._robot.set_T_world_frame("left_foot", self._T_left_foot)
         self._robot.update_kinematics()
 
-        self._trunk_z_initial = self._robot.get_T_world_frame("trunk")[2, 3]
         self._com_initial = self._robot.com_world()
         T_right_foot = self._robot.get_T_world_frame("right_foot").copy()
+        T_right_foot[2, 3] = 0.0
 
-        # Create IK tasks
-        self._left_foot_task = self._solver.add_frame_task("left_foot", T_left_foot)
+        self._left_foot_task = self._solver.add_frame_task("left_foot", self._T_left_foot)
         self._left_foot_task.configure("left_foot", "hard", 1.0)
         self._right_foot_task = self._solver.add_frame_task("right_foot", T_right_foot)
         self._right_foot_task.configure("right_foot", "hard", 1.0)
@@ -83,8 +88,10 @@ class SquatMove(Move):
             self._robot.update_kinematics()
 
         self._start_target_angles = [self._robot.get_joint(name) for name in _LOWER_JOINTS + _UPPER_JOINTS]
+        self._placo_ready = True
 
     def on_start(self, obs: Observation, command: MotorCommand) -> None:
+        self._initialize()
         if self._start_lerp_time_s is None:
             self._start_lerp_time_s = obs.robot_state.time_s
             self._start_lerp_angles = [obs.robot_state.motor_angles.get(name, 0.0) for name in _LOWER_JOINTS + _UPPER_JOINTS]

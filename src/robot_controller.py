@@ -6,7 +6,7 @@ from constants import MOTOR_TO_ID, MOTOR_SIGN
 class RobotController:
     """Wraps Xl330PyController."""
 
-    def __init__(self, serial_port: str = "/dev/ttyAMA0", baudrate: int = 1_000_000, timeout: float = 0.1) -> None:
+    def __init__(self, serial_port: str = "/dev/ttyAMA0", baudrate: int = 1_000_000, timeout: float = 1.0) -> None:
         self._controller = Xl330PyController(serial_port=serial_port, baudrate=baudrate, timeout=timeout)
         self._id_to_sign: dict[int, float] = {MOTOR_TO_ID[name]: MOTOR_SIGN[name] for name in MOTOR_TO_ID}
 
