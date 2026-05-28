@@ -1,4 +1,4 @@
-"""Standalone IMU reader — prints roll, pitch and yaw at 2 Hz.
+"""Standalone IMU reader — prints roll, pitch, yaw and gyroscope data at 2 Hz.
 
 Usage:
     uv run src/imu.py
@@ -17,8 +17,7 @@ _bmi_module.GYRO_ADDRESS = 0x68
 
 imu = BMI088(i2c_bus=IMU_I2C_BUS)
 
-print("IMU (BMI088) — roll/pitch/yaw. Ctrl-C to stop.")
-print(f"{'roll':>10}  {'pitch':>10}  {'yaw':>10}")
+print("IMU (BMI088) — Ctrl-C to stop.")
 
 dt = 0.5
 while True:
@@ -26,5 +25,10 @@ while True:
     roll = math.degrees(math.atan2(2 * (w * x + y * z), 1 - 2 * (x * x + y * y)))
     pitch = math.degrees(math.asin(max(-1.0, min(1.0, 2 * (w * y - z * x)))))
     yaw = math.degrees(math.atan2(2 * (w * z + x * y), 1 - 2 * (y * y + z * z)))
-    print(f"{roll:>+9.1f}°  {pitch:>+9.1f}°  {yaw:>+9.1f}°", flush=True)
+    gx, gy, gz = imu.read_gyroscope()
+    ax, ay, az = imu.read_accelerometer()
+    print("--------------------------------------------")
+    print(f"IMU:  roll={roll:+.1f}°  pitch={pitch:+.1f}°  yaw={yaw:+.1f}°")
+    print(f"Gyro: gx={gx:+.3f}  gy={gy:+.3f}  gz={gz:+.3f} rad/s")
+    print(f"Acc:  ax={ax:+.3f}  ay={ay:+.3f}  az={az:+.3f} g")
     time.sleep(dt)

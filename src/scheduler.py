@@ -60,7 +60,7 @@ class Scheduler:
 
                 # Read robot observations and user input
                 try:
-                    robot_state = self.observer.read_state()
+                    robot_state = self.observer.read_state(self.dt)
                 except RuntimeError as e:
                     self._serial_errors += 1
                     if self._serial_errors >= 3:
@@ -99,6 +99,7 @@ class Scheduler:
                     acc = obs.robot_state.acc
                     gyro = obs.robot_state.gyro
                     quat = obs.robot_state.quat
+                    print("--------------------------------------------", end="\r\n", flush=True)
                     if quat:
                         w, x, y, z = quat
                         roll = math.degrees(math.atan2(2 * (w * x + y * z), 1 - 2 * (x * x + y * y)))
@@ -108,6 +109,9 @@ class Scheduler:
                     if gyro:
                         gx, gy, gz = gyro
                         print(f"Gyro: gx={gx:+.3f}  gy={gy:+.3f}  gz={gz:+.3f} rad/s", end="\r\n", flush=True)
+                    if acc:
+                        ax, ay, az = acc
+                        print(f"Acc:  ax={ax:+.3f}  ay={ay:+.3f}  az={az:+.3f} g", end="\r\n", flush=True)
                     self._last_imu_print_s = start_time
 
                 # Sleep to keep a fixed control frequency

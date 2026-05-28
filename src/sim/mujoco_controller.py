@@ -161,7 +161,7 @@ class MuJoCoController:
         gx, gy, gz = self._data.sensordata[adr:adr + 3]
         return float(gx), float(gy), float(gz)
 
-    def read_quat(self) -> tuple[float, float, float, float]:
+    def read_quat(self, dt: float) -> tuple[float, float, float, float]:
         """Return orientation quaternion (w, x, y, z) from the 'orientation' framequat sensor."""
         if self._sensor_orientation < 0:
             return 1.0, 0.0, 0.0, 0.0

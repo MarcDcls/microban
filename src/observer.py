@@ -29,7 +29,7 @@ class Observer:
     def __init__(self, controller: ControllerProtocol):
         self.controller = controller
 
-    def read_state(self) -> RobotState:
+    def read_state(self, dt: float) -> RobotState:
         """Read current motor positions from the controller."""
         state = RobotState(time_s=time.perf_counter())
 
@@ -41,7 +41,7 @@ class Observer:
         try:
             state.acc = list(self.controller.read_acc())
             state.gyro = list(self.controller.read_gyro())
-            state.quat = list(self.controller.read_quat())
+            state.quat = list(self.controller.read_quat(dt))
         except Exception:
             pass
 

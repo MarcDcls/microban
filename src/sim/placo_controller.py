@@ -71,7 +71,7 @@ class PlacoViewerController:
         """No gyro available in the MeshCat viewer — return zeros."""
         return 0.0, 0.0, 0.0
 
-    def read_quat(self) -> tuple[float, float, float, float]:
+    def read_quat(self, dt: float) -> tuple[float, float, float, float]:
         """Return orientation quaternion (w, x, y, z) from the IMU site frame via FK."""
         T = self._robot.get_T_world_frame("imu")
         R = T[:3, :3]

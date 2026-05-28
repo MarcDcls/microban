@@ -56,8 +56,7 @@ class RobotController:
         gx, gy, gz = self._imu.read_gyroscope()
         return float(gx), float(gy), float(gz)
 
-    def read_quat(self) -> tuple[float, float, float, float]:
+    def read_quat(self, dt: float) -> tuple[float, float, float, float]:
         """Return orientation quaternion (w, x, y, z)."""
-        dt = 0.02  # nominal 50 Hz
         w, x, y, z = self._imu.get_quat(dt)
         return float(w), float(x), float(y), float(z)
