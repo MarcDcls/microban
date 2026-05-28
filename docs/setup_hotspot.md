@@ -7,10 +7,12 @@ Note that this method requires a 2.4GHz Wi-Fi hotspot, as the Raspberry Pi Zero 
 
 ## Setting up the SD card
 
-To connect to your Wi-Fi hotspot, you will need to create a file named `telephone.nmconnection` in the `/etc/NetworkManager/system-connections/` directory of the root filesystem of your SD card. To do this, connect to your SD card and use the following command, replacing `[PC_NAME]` with the name of your computer:
+To connect to your Wi-Fi hotspot, you will need to create a file named `telephone.nmconnection` in the `/etc/NetworkManager/system-connections/` directory of the root filesystem of your SD card. You can either create this file through a SSH connection to the Pi or directly on your computer by connecting the SD card (which is more convenient if you already left your local network).
+
+To do this, insert the SD card into your computer and use the following command, replacing `[PC_USER]` with the user name on your computer:
 
 ```
-sudo nano /media/[PC_NAME]/rootfs/etc/NetworkManager/system-connections/telephone.nmconnection
+sudo nano /media/[PC_USER]/rootfs/etc/NetworkManager/system-connections/telephone.nmconnection
 ```
 
 Paste the following content into the file, replacing `[HOTSPOT_NAME]` and `[HOTSPOT_PASSWORD]` with the actual name and password of your Wi-Fi hotspot:
@@ -40,7 +42,7 @@ method=auto
 Then, set the permissions of the file to 600 to ensure that it is only readable by the root user:
 
 ```
-sudo chmod 600 /media/[PC_NAME]/rootfs/etc/NetworkManager/system-connections/telephone.nmconnection
+sudo chmod 600 /media/[PC_USER]/rootfs/etc/NetworkManager/system-connections/telephone.nmconnection
 ```
 
 Finally, safely eject the SD card from your computer and insert it into the robot. When you power on the robot, it should automatically connect to the specified Wi-Fi hotspot.
