@@ -6,6 +6,7 @@ sync:
 	rsync -avz \
 		--exclude='.git' \
 		--exclude='.venv' \
+		--exclude='uv.lock' \
 		--exclude='__pycache__' \
 		--exclude='cad' \
 		--exclude='docs' \
@@ -16,15 +17,15 @@ setup: sync
 	ssh $(HOST) "bash -l -c 'cd microban && uv sync'"
 
 run: sync
-	ssh -tt $(HOST) "bash -l -c 'cd microban && uv run src/main.py'"
+	ssh -tt $(HOST) "bash -l -c 'cd microban && PYTHONPATH=src .venv/bin/python src/main.py'"
 
 stop:
-	ssh -tt $(HOST) "bash -l -c 'cd microban && uv run src/stop.py'"
+	ssh -tt $(HOST) "bash -l -c 'cd microban && PYTHONPATH=src .venv/bin/python src/stop.py'"
 
 ID ?=
 
 voltage: sync
-	ssh $(HOST) "bash -l -c 'cd microban && uv run src/voltage.py $(ID)'"
+	ssh $(HOST) "bash -l -c 'cd microban && PYTHONPATH=src .venv/bin/python src/voltage.py $(ID)'"
 
 sim:
 	PYTHONPATH=src uv run --group sim src/sim/sim_main.py --hz 50

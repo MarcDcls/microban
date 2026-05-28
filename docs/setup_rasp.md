@@ -60,21 +60,41 @@ Now you can connect to the Pi without entering a password!
 
 ## Raspberry Pi configuration
 
-Connect to the Pi with `ssh microban` and run the following commands to set it up:
+Copy the configuration file to the Pi. From your computer, run:
+```
+scp docs/config.txt microban:config.txt
+```
+
+Then, on the Pi, move the configuration file to the correct location:
+```
+sudo mv config.txt /boot/firmware/config.txt
+```
+
+Reboot the Pi with `sudo reboot` for the changes to take effect.
+
+After rebooting, connect to the Pi with `ssh microban` and setup the raspi-config:
 - run `sudo raspi-config`
     - go to Interface Options
         - go to I2C
-            - enable I2C
+            - enable I2C    
         - go to Serial Port
             - disable Serial Console
             - enable Serial Port
-- run `sudo nmcli con mod <tab_to_find_your_wifi_connection> wifi.powersave disable` to fix annoying ssh hangs
-- desactivate automatic updates with `sudo nano /etc/apt/apt.conf.d/20auto-upgrades` and set the content to:
+
+Then, to prevent ssh hangs when the Pi is idle, run:
 ```
+sudo nmcli con mod <tab_to_find_your_wifi_connection> wifi.powersave disable
+```
+
+Finally desactivate automatic updates by running 
+```
+sudo touch /etc/apt/apt.conf.d/99disable-auto-upgrades
+cat << 'EOF' | sudo tee /etc/apt/apt.conf.d/99disable-auto-upgrades > /dev/null
 APT::Periodic::Update-Package-Lists "0";
 APT::Periodic::Download-Upgradeable-Packages "0";
 APT::Periodic::AutocleanInterval "0";
 APT::Periodic::Unattended-Upgrade "0";
+EOF
 ```
-- remove snapd with `sudo apt purge snapd`
-- `sudo reboot 0`
+
+Reboot the Pi with `sudo reboot`.
