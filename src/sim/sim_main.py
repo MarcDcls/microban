@@ -21,7 +21,7 @@ def main() -> None:
     parser.add_argument("--hz", type=float, default=50.0, metavar="FREQ", help="Scheduler frequency in Hz (default: 50)")
     args = parser.parse_args()
 
-    input_source = MuJoCoInputSource(move_keys={"h": "head", "s": "squat", "w": "walk"})
+    input_source = MuJoCoInputSource(move_keys={"h": "head", "s": "squat", "v": "walk"})
     controller = MuJoCoController(
         mjcf_path="src/model/mjcf/scene.xml",
         key_callback=input_source.key_callback,

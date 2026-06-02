@@ -12,7 +12,6 @@ class WalkMove(Move):
     def __init__(self, controller: ControllerProtocol | None = None) -> None:
         super().__init__()
         self._controller = controller
-
         self._last_action = [0.0] * len(MOTOR_TO_ID)
 
         # Load ONNX policy
@@ -25,9 +24,6 @@ class WalkMove(Move):
         self.state = MoveState.ACTIVE
 
     def step(self, obs: Observation, command: MotorCommand) -> None:
-        if self._controller is None:
-            return
-
         input_obs = self.build_observation(obs)
 
         # Run policy

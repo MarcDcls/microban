@@ -47,7 +47,7 @@ def main() -> None:
         scheduler = Scheduler(
             frequency_hz=50.0,
             controller=controller,
-            input_source=KeyboardInputSource(move_keys={"h": "head", "s": "squat", "w": "walk"}),
+            input_source=KeyboardInputSource(move_keys={"h": "head", "s": "squat", "v": "walk"}),
             moves={
                 "head": RotateHeadMove(),
                 "squat": SquatMove(),

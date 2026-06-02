@@ -69,8 +69,9 @@ MOTOR_SIGN = {
 }
 
 # Position P Gain (Dynamixel register value)
-KP_DEFAULT: int = 400  # ~1.38 Nm/rad
-KP_RL: int = 125       # ~0.43 Nm/rad
+KP_DEFAULT: int = 400         # ~1.38 Nm/rad
+KP_RL: int = 125              # ~0.43 Nm/rad
+KP_GAIN_PRM: float = 0.00345  # Nm/rad per register unit (for Xl330)
 
 # IMU (BMI088) I2C bus number on the Raspberry Pi
 IMU_I2C_BUS: int = 1

@@ -9,16 +9,11 @@ import mujoco.viewer
 if TYPE_CHECKING:
     from sim.mujoco_input import MuJoCoInputSource
 
-from constants import MOTOR_TO_ID, ID_TO_MOTOR, NEUTRAL_POSE
+from constants import MOTOR_TO_ID, ID_TO_MOTOR, NEUTRAL_POSE, KP_GAIN_PRM
 
 
 class MuJoCoController:
     """MuJoCo-backed controller."""
-
-    # kp [Nm/rad] = (KPP_TBL / 128) × (PULSES_PER_REV / 2 * pi) / PWM_MAX × STALL_TORQUE
-    # with PWM_MAX = 885, STALL_TORQUE = 0.60 Nm, and PULSES_PER_REV = 4096, this gives:
-    SIM_KP_DEFAULT: float = 1.38  # [Nm/rad]
-    SIM_KP_RL: float = 0.43       # [Nm/rad]
 
     def __init__(
         self,
@@ -69,44 +64,25 @@ class MuJoCoController:
     def viewer_opt(self) -> mujoco.MjvOption:
         return self._viewer.opt
 
-    @staticmethod
-    def _register_to_kp(register_val: int) -> float:
-        """Convert Dynamixel Position P Gain register value to MuJoCo kp [Nm/rad]."""
-        return (
-            (register_val / 128)
-            * (MuJoCoController._PULSES_PER_REV / (2 * math.pi))
-            / MuJoCoController._PWM_MAX
-            * MuJoCoController._STALL_TORQUE_NM
-        )
-
-    @staticmethod
-    def _kp_to_register(kp: float) -> int:
-        """Convert MuJoCo kp [Nm/rad] to Dynamixel Position P Gain register value."""
-        return round(
-            kp
-            * 128
-            * MuJoCoController._PWM_MAX
-            / (MuJoCoController._PULSES_PER_REV / (2 * math.pi))
-            / MuJoCoController._STALL_TORQUE_NM
-        )
-
     def set_kp(self, kp: float) -> None:
-        """Set the same Kp [Nm/rad] on all actuators at once."""
-        self._model.actuator_gainprm[:, 0] = kp
-        self._model.actuator_biasprm[:, 1] = -kp
+        """Set the same Kp on all actuators at once.
+        This function take Kp in register units and converts it in Nm/rad."""
+        kp_si = kp * KP_GAIN_PRM
+        self._model.actuator_gainprm[:, 0] = kp_si
+        self._model.actuator_biasprm[:, 1] = -kp_si
 
     def sync_read_kp(self, ids: list[int]) -> list[int]:
         return [
-            self._kp_to_register(float(self._model.actuator_gainprm[self._name_to_actuator_idx[ID_TO_MOTOR[motor_id]], 0]))
+            self._kp_to_register(int(float(self._model.actuator_gainprm[self._name_to_actuator_idx[ID_TO_MOTOR[motor_id]], 0]) / KP_GAIN_PRM))
             for motor_id in ids
         ]
 
     def sync_write_kp(self, ids: list[int], gains: list[int]) -> None:
         for motor_id, gain in zip(ids, gains):
-            kp = self._register_to_kp(gain)
+            kp_si = gain * KP_GAIN_PRM
             idx = self._name_to_actuator_idx[ID_TO_MOTOR[motor_id]]
-            self._model.actuator_gainprm[idx, 0] = kp
-            self._model.actuator_biasprm[idx, 1] = -kp
+            self._model.actuator_gainprm[idx, 0] = kp_si
+            self._model.actuator_biasprm[idx, 1] = -kp_si
 
     def sync_write_torque_enable(self, ids: list[int], values: list[bool]) -> None:
         pass
