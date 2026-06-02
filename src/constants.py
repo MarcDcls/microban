@@ -74,3 +74,6 @@ KP_RL: int = 125       # ~0.43 Nm/rad
 
 # IMU (BMI088) I2C bus number on the Raspberry Pi
 IMU_I2C_BUS: int = 1
+
+# Rotation from trunk frame (body) to IMU sensor frame
+IMU_MOUNT_QUAT: tuple[float, float, float, float] = (0.5, -0.5, -0.5, 0.5)

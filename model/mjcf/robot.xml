@@ -108,7 +108,7 @@ http://www.apache.org/licenses/LICENSE-2.0
       <!-- Frame body -->
       <site group="3" name="body" pos="0 0 0" quat="1 -0 -0 -0"/>
       <!-- Frame imu -->
-      <site group="3" name="imu" pos="0.01483 -0.002 0.0675" quat="0.5 0.5 -0.5 -0.5"/>
+      <site group="3" name="imu" pos="0.01483 -0.002 0.0675" quat="0.5 -0.5 -0.5 0.5"/>
       <!-- Link head -->
       <body name="head" pos="-0.00204165 -0 0.126" quat="0.707107 0 0 0.707107">
         <!-- Joint from trunk to head -->

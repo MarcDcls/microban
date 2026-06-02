@@ -6,6 +6,7 @@ from typing import Optional
 
 from constants import MOTOR_TO_ID
 from controller import ControllerProtocol
+from imu_reader import imu_quat_to_body
 from observer import Observer, Observation
 from input.input_source import InputSource, UserInput
 from moves.move import MotorCommand, Move, MoveState
@@ -109,18 +110,23 @@ class Scheduler:
                     gyro = obs.robot_state.gyro
                     quat = obs.robot_state.quat
                     print("--------------------------------------------", end="\r\n", flush=True)
-                    if quat:
-                        w, x, y, z = quat
-                        roll = math.degrees(math.atan2(2 * (w * x + y * z), 1 - 2 * (x * x + y * y)))
-                        pitch = math.degrees(math.asin(max(-1.0, min(1.0, 2 * (w * y - z * x)))))
-                        yaw = math.degrees(math.atan2(2 * (w * z + x * y), 1 - 2 * (y * y + z * z)))
-                        print(f"IMU:  roll={roll:+.1f}°  pitch={pitch:+.1f}°  yaw={yaw:+.1f}°", end="\r\n", flush=True)
                     if gyro:
                         gx, gy, gz = gyro
                         print(f"Gyro: gx={gx:+.3f}  gy={gy:+.3f}  gz={gz:+.3f} rad/s", end="\r\n", flush=True)
                     if acc:
                         ax, ay, az = acc
                         print(f"Acc:  ax={ax:+.3f}  ay={ay:+.3f}  az={az:+.3f} g", end="\r\n", flush=True)
+                    if quat:
+                        w, x, y, z = quat
+                        roll = math.degrees(math.atan2(2 * (w * x + y * z), 1 - 2 * (x * x + y * y)))
+                        pitch = math.degrees(math.asin(max(-1.0, min(1.0, 2 * (w * y - z * x)))))
+                        yaw = math.degrees(math.atan2(2 * (w * z + x * y), 1 - 2 * (y * y + z * z)))
+                        print(f"IMU:  roll={roll:+.1f}°  pitch={pitch:+.1f}°  yaw={yaw:+.1f}°", end="\r\n", flush=True)
+                        bw, bx, by, bz = imu_quat_to_body((w, x, y, z))
+                        b_roll = math.degrees(math.atan2(2 * (bw * bx + by * bz), 1 - 2 * (bx * bx + by * by)))
+                        b_pitch = math.degrees(math.asin(max(-1.0, min(1.0, 2 * (bw * by - bz * bx)))))
+                        b_yaw = math.degrees(math.atan2(2 * (bw * bz + bx * by), 1 - 2 * (by * by + bz * bz)))
+                        print(f"Body: roll={b_roll:+.1f}°  pitch={b_pitch:+.1f}°  yaw={b_yaw:+.1f}°", end="\r\n", flush=True)
                     self._last_imu_print_s = start_time
 
                 # Sleep to keep a fixed control frequency

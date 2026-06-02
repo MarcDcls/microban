@@ -4,6 +4,7 @@ from dataclasses import dataclass
 
 from bmi088 import BMI088
 import bmi088.bmi088 as _bmi_module
+from constants import IMU_MOUNT_QUAT
 
 
 # Python defaults: ACC=0x18, GYRO=0x69
@@ -20,6 +21,24 @@ class IMUSnapshot:
     acc: tuple[float, float, float]
     valid: bool
     error_count: int
+
+
+def imu_quat_to_body(
+    q: tuple[float, float, float, float],
+) -> tuple[float, float, float, float]:
+    """Convert a quaternion measured in IMU frame to the trunk (body) frame.
+
+    Applies q_body = q_imu * conjugate(IMU_MOUNT_QUAT).
+    """
+    w1, x1, y1, z1 = q
+    # conjugate of mount quaternion
+    w2, x2, y2, z2 = IMU_MOUNT_QUAT[0], -IMU_MOUNT_QUAT[1], -IMU_MOUNT_QUAT[2], -IMU_MOUNT_QUAT[3]
+    return (
+        w1 * w2 - x1 * x2 - y1 * y2 - z1 * z2,
+        w1 * x2 + x1 * w2 + y1 * z2 - z1 * y2,
+        w1 * y2 - x1 * z2 + y1 * w2 + z1 * x2,
+        w1 * z2 + x1 * y2 - y1 * x2 + z1 * w2,
+    )
 
 
 class ThreadedIMUReader:
