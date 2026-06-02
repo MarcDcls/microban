@@ -8,27 +8,35 @@ Usage:
 import math
 import time
 
-from bmi088 import BMI088
-import bmi088.bmi088 as _bmi_module
 from constants import IMU_I2C_BUS
+from imu_reader import ThreadedIMUReader
 
-# The library default gyro address is 0x69, on our board it's 0x68
-_bmi_module.GYRO_ADDRESS = 0x68
-
-imu = BMI088(i2c_bus=IMU_I2C_BUS)
+reader = ThreadedIMUReader(i2c_bus=IMU_I2C_BUS, frequency_hz=200.0)
+reader.start()
 
 print("IMU (BMI088) — Ctrl-C to stop.")
 
-dt = 0.5
-while True:
-    w, x, y, z = imu.get_quat(dt)
-    roll = math.degrees(math.atan2(2 * (w * x + y * z), 1 - 2 * (x * x + y * y)))
-    pitch = math.degrees(math.asin(max(-1.0, min(1.0, 2 * (w * y - z * x)))))
-    yaw = math.degrees(math.atan2(2 * (w * z + x * y), 1 - 2 * (y * y + z * z)))
-    gx, gy, gz = imu.read_gyroscope()
-    ax, ay, az = imu.read_accelerometer()
-    print("--------------------------------------------")
-    print(f"IMU:  roll={roll:+.1f}°  pitch={pitch:+.1f}°  yaw={yaw:+.1f}°")
-    print(f"Gyro: gx={gx:+.3f}  gy={gy:+.3f}  gz={gz:+.3f} rad/s")
-    print(f"Acc:  ax={ax:+.3f}  ay={ay:+.3f}  az={az:+.3f} g")
-    time.sleep(dt)
+try:
+    while True:
+        sample = reader.get_latest()
+        w, x, y, z = sample.quat
+        gx, gy, gz = sample.gyro
+        ax, ay, az = sample.acc
+
+        roll = math.degrees(math.atan2(2 * (w * x + y * z), 1 - 2 * (x * x + y * y)))
+        pitch = math.degrees(math.asin(max(-1.0, min(1.0, 2 * (w * y - z * x)))))
+        yaw = math.degrees(math.atan2(2 * (w * z + x * y), 1 - 2 * (y * y + z * z)))
+
+        age_ms = max(0.0, (time.perf_counter() - sample.timestamp_s) * 1000.0)
+        print("--------------------------------------------")
+        print(f"Gyro: gx={gx:+.3f}  gy={gy:+.3f}  gz={gz:+.3f} rad/s")
+        print(f"Acc:  ax={ax:+.3f}  ay={ay:+.3f}  az={az:+.3f} g")
+        print(f"IMU:  roll={roll:+.1f}°  pitch={pitch:+.1f}°  yaw={yaw:+.1f}°")
+        print(f"Status: valid={sample.valid}  age={age_ms:.1f} ms  errors={sample.error_count}")
+
+        # Slow print loop; the internal reader still runs at 200 Hz.
+        time.sleep(0.5)
+except KeyboardInterrupt:
+    pass
+finally:
+    reader.stop()

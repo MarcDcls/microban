@@ -41,6 +41,7 @@ class Scheduler:
         self.loop_start_time = time.perf_counter()
         self._serial_errors = 0
         self._last_imu_print_s: float = 0.0
+        self._last_imu_stale_warn_s: float = 0.0
 
     def run(self):
         print(f"Starting control loop at {1 / self.dt:.1f} Hz", end="\r\n", flush=True)
@@ -73,6 +74,14 @@ class Scheduler:
                 robot_state.time_s = start_time - self.loop_start_time
                 user_input = self.input_source.read() if self.input_source else UserInput()
                 obs = Observation(robot_state=robot_state, user_input=user_input)
+
+                imu_status_getter = getattr(self.controller, "get_imu_status", None)
+                if callable(imu_status_getter):
+                    imu_status = imu_status_getter()
+                    age_s = float(imu_status.get("age_s", 0.0))
+                    if age_s > self.dt and (start_time - self._last_imu_stale_warn_s) >= 1.0:
+                        print(f"Warning: stale IMU data ({age_s * 1000.0:.1f} ms old)", end="\r\n", flush=True)
+                        self._last_imu_stale_warn_s = start_time
 
                 # Update move states and dispatch one call per move per tick
                 command = MotorCommand()
@@ -138,6 +147,10 @@ class Scheduler:
 
         if self.input_source:
             self.input_source.stop()
+
+        shutdown = getattr(self.controller, "shutdown", None)
+        if callable(shutdown):
+            shutdown()
 
         motor_ids = list(MOTOR_TO_ID.values())
         self.controller.sync_write_torque_enable(motor_ids, [False] * len(motor_ids))

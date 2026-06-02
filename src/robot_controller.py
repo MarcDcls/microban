@@ -1,12 +1,7 @@
 from rustypot import Xl330PyController
 
 from constants import MOTOR_TO_ID, MOTOR_SIGN, IMU_I2C_BUS
-
-from bmi088 import BMI088
-import bmi088.bmi088 as _bmi_module
-
-# The library default gyro address is 0x69, on our board it's 0x68
-_bmi_module.GYRO_ADDRESS = 0x68
+from imu_reader import ThreadedIMUReader
 
 
 class RobotController:
@@ -15,7 +10,8 @@ class RobotController:
     def __init__(self, serial_port: str = "/dev/ttyAMA0", baudrate: int = 1_000_000, timeout: float = 0.1) -> None:
         self._controller = Xl330PyController(serial_port=serial_port, baudrate=baudrate, timeout=timeout)
         self._id_to_sign: dict[int, float] = {MOTOR_TO_ID[name]: MOTOR_SIGN[name] for name in MOTOR_TO_ID}
-        self._imu: BMI088 = BMI088(i2c_bus=IMU_I2C_BUS)
+        self._imu_reader = ThreadedIMUReader(i2c_bus=IMU_I2C_BUS, frequency_hz=200.0)
+        self._imu_reader.start()
 
     def sync_write_torque_enable(self, ids: list[int], values: list[bool]) -> None:
         self._controller.sync_write_torque_enable(ids, values)
@@ -48,15 +44,22 @@ class RobotController:
 
     def read_acc(self) -> tuple[float, float, float]:
         """Return raw accelerometer (ax, ay, az) in g."""
-        ax, ay, az = self._imu.read_accelerometer()
-        return float(ax), float(ay), float(az)
+        return self._imu_reader.get_latest().acc
 
     def read_gyro(self) -> tuple[float, float, float]:
         """Return (gx, gy, gz) in rad/s."""
-        gx, gy, gz = self._imu.read_gyroscope()
-        return float(gx), float(gy), float(gz)
+        return self._imu_reader.get_latest().gyro
 
     def read_quat(self, dt: float) -> tuple[float, float, float, float]:
         """Return orientation quaternion (w, x, y, z)."""
-        w, x, y, z = self._imu.get_quat(dt)
-        return float(w), float(x), float(y), float(z)
+        _ = dt
+        return self._imu_reader.get_latest().quat
+
+    def get_imu_status(self) -> dict[str, float | int | bool]:
+        return self._imu_reader.get_status()
+
+    def shutdown(self) -> None:
+        self._imu_reader.stop()
+
+    def close(self) -> None:
+        self.shutdown()

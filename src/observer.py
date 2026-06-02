@@ -28,6 +28,8 @@ class Observation:
 class Observer:
     def __init__(self, controller: ControllerProtocol):
         self.controller = controller
+        self._last_imu_warn_s: float = 0.0
+        self._imu_warn_interval_s: float = 1.0
 
     def read_state(self, dt: float) -> RobotState:
         """Read current motor positions from the controller."""
@@ -42,8 +44,11 @@ class Observer:
             state.acc = list(self.controller.read_acc())
             state.gyro = list(self.controller.read_gyro())
             state.quat = list(self.controller.read_quat(dt))
-        except Exception:
-            pass
+        except Exception as exc:
+            now = time.perf_counter()
+            if (now - self._last_imu_warn_s) >= self._imu_warn_interval_s:
+                print(f"Warning: observer IMU read failed: {exc}", end="\r\n", flush=True)
+                self._last_imu_warn_s = now
 
         return state
 
