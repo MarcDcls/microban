@@ -32,6 +32,15 @@ class RobotController:
         value = raw[0] if isinstance(raw, (list, tuple)) else float(raw)
         return value * self._id_to_sign[motor_id]
 
+    def sync_read_present_velocity(self, ids: list[int]) -> list[float]:
+        raw = self._controller.sync_read_present_velocity(ids)
+        return [r * self._id_to_sign[motor_id] for motor_id, r in zip(ids, raw)]
+    
+    def read_present_velocity(self, motor_id: int) -> float:
+        raw = self._controller.read_present_velocity(motor_id)
+        value = raw[0] if isinstance(raw, (list, tuple)) else float(raw)
+        return value * self._id_to_sign[motor_id]
+
     def read_present_input_voltage(self, motor_id: int) -> float:
         raw = self._controller.read_present_input_voltage(motor_id)
         return raw[0] if isinstance(raw, (list, tuple)) else float(raw)

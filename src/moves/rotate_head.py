@@ -34,7 +34,7 @@ class RotateHeadMove(Move):
     def on_start(self, obs: Observation, command: MotorCommand) -> None:
         if self._lerp_start_time_s is None:
             self._lerp_start_time_s = obs.robot_state.time_s
-            self._lerp_start_angle = obs.robot_state.motor_angles.get("head", 0.0)
+            self._lerp_start_angle = obs.robot_state.motor_positions.get("head", 0.0)
 
         t = (obs.robot_state.time_s - self._lerp_start_time_s) / self.lerp_duration
         t = min(t, 1.0)
@@ -53,7 +53,7 @@ class RotateHeadMove(Move):
     def on_stop(self, obs: Observation, command: MotorCommand) -> None:
         if self._lerp_start_time_s is None:
             self._lerp_start_time_s = obs.robot_state.time_s
-            self._lerp_start_angle = obs.robot_state.motor_angles.get("head", 0.0)
+            self._lerp_start_angle = obs.robot_state.motor_positions.get("head", 0.0)
 
         t = (obs.robot_state.time_s - self._lerp_start_time_s) / self.lerp_duration
         t = min(t, 1.0)

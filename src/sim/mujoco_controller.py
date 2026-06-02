@@ -34,6 +34,7 @@ class MuJoCoController:
 
         self._name_to_actuator_idx: dict[str, int] = {}
         self._name_to_qpos_idx: dict[str, int] = {}
+        self._name_to_qvel_idx: dict[str, int] = {}
         for name in MOTOR_TO_ID:
             actuator_id = mujoco.mj_name2id(self._model, mujoco.mjtObj.mjOBJ_ACTUATOR, name)
             joint_id = mujoco.mj_name2id(self._model, mujoco.mjtObj.mjOBJ_JOINT, name)
@@ -43,7 +44,7 @@ class MuJoCoController:
                 raise ValueError(f"Joint '{name}' not found in MJCF model {mjcf_path!r}")
             self._name_to_actuator_idx[name] = actuator_id
             self._name_to_qpos_idx[name] = self._model.jnt_qposadr[joint_id]
-
+            self._name_to_qvel_idx[name] = self._model.jnt_dofadr[joint_id]
         # Number of physics sub-steps per scheduler tick (scheduler runs at 50 Hz)
         self._steps_per_tick = max(1, round(0.02 / self._model.opt.timestep))
 
@@ -137,6 +138,13 @@ class MuJoCoController:
     def read_present_position(self, motor_id: int) -> float:
         name = ID_TO_MOTOR[motor_id]
         return float(self._data.qpos[self._name_to_qpos_idx[name]])
+
+    def sync_read_present_velocity(self, ids: list[int]) -> list[float]:
+        return [self._data.qvel[self._name_to_qvel_idx[ID_TO_MOTOR[motor_id]]] for motor_id in ids]
+
+    def read_present_velocity(self, motor_id: int) -> float:
+        name = ID_TO_MOTOR[motor_id]
+        return float(self._data.qvel[self._name_to_qvel_idx[name]])
 
     def read_present_input_voltage(self, motor_id: int) -> float:
         return 80.0

@@ -77,3 +77,26 @@ IMU_I2C_BUS: int = 1
 
 # Rotation from trunk frame (body) to IMU sensor frame
 IMU_MOUNT_QUAT: tuple[float, float, float, float] = (0.5, -0.5, -0.5, 0.5)
+
+# Observation DoF ordering
+OBSERVATION_DOF_ORDER = [
+    "head",
+    "right_shoulder_pitch",
+    "right_shoulder_roll",
+    "right_elbow",
+    "right_hip_yaw",
+    "right_hip_roll",
+    "right_hip_pitch",
+    "right_knee",
+    "right_ankle_pitch",
+    "right_ankle_roll",
+    "left_shoulder_pitch",
+    "left_shoulder_roll",
+    "left_elbow",
+    "left_hip_yaw",
+    "left_hip_roll",
+    "left_hip_pitch",
+    "left_knee",
+    "left_ankle_pitch",
+    "left_ankle_roll"
+]

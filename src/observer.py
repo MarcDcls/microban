@@ -4,6 +4,7 @@ import time
 from controller import ControllerProtocol
 from input.input_source import UserInput
 from constants import MOTOR_TO_ID
+from imu_reader import imu_quat_to_body, quat_apply_inverse
 
 
 @dataclass
@@ -11,10 +12,17 @@ class RobotState:
     """Hardware sensor readings for one scheduler iteration."""
 
     time_s: float = 0.0
-    acc: list[float] = field(default_factory=list)
-    gyro: list[float] = field(default_factory=list)
-    quat: list[float] = field(default_factory=list)
-    motor_angles: dict[str, float] = field(default_factory=dict)
+
+    # IMU data
+    acc: list[float] = field(default_factory=list) # accelerometer readings in g (ax, ay, az)
+    gyro: list[float] = field(default_factory=list) # gyroscope readings in rad/s (gx, gy, gz)
+    quat: list[float] = field(default_factory=list) # IMU orientation as a quaternion (w, x, y, z)
+    body_quat: list[float] = field(default_factory=list) # body frame orientation as a quaternion (w, x, y, z)
+    projected_gravity: list[float] = field(default_factory=list) # gravity vector projected in body frame
+    
+    # Motor states
+    motor_positions: dict[str, float] = field(default_factory=dict)
+    motor_velocities: dict[str, float] = field(default_factory=dict)
 
 
 @dataclass
@@ -38,12 +46,20 @@ class Observer:
         motor_names = list(MOTOR_TO_ID.keys())
         motor_ids = list(MOTOR_TO_ID.values())
         angles = self.controller.sync_read_present_position(motor_ids)
-        state.motor_angles = dict(zip(motor_names, angles))
+        state.motor_positions = dict(zip(motor_names, angles))
+
+        velocities = self.controller.sync_read_present_velocity(motor_ids)
+        state.motor_velocities = dict(zip(motor_names, velocities))
 
         try:
             state.acc = list(self.controller.read_acc())
             state.gyro = list(self.controller.read_gyro())
             state.quat = list(self.controller.read_quat(dt))
+
+            # Project gravity vector into body frame
+            state.body_quat = list(imu_quat_to_body(state.quat))
+            state.projected_gravity = list(quat_apply_inverse(state.body_quat, [0.0, 0.0, -1.0]))
+
         except Exception as exc:
             now = time.perf_counter()
             if (now - self._last_imu_warn_s) >= self._imu_warn_interval_s:

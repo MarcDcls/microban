@@ -1,6 +1,7 @@
 import threading
 import time
 from dataclasses import dataclass
+import numpy as np
 
 from bmi088 import BMI088
 import bmi088.bmi088 as _bmi_module
@@ -31,7 +32,6 @@ def imu_quat_to_body(
     Applies q_body = q_imu * conjugate(IMU_MOUNT_QUAT).
     """
     w1, x1, y1, z1 = q
-    # conjugate of mount quaternion
     w2, x2, y2, z2 = IMU_MOUNT_QUAT[0], -IMU_MOUNT_QUAT[1], -IMU_MOUNT_QUAT[2], -IMU_MOUNT_QUAT[3]
     return (
         w1 * w2 - x1 * x2 - y1 * y2 - z1 * z2,
@@ -40,6 +40,20 @@ def imu_quat_to_body(
         w1 * z2 + x1 * y2 - y1 * x2 + z1 * w2,
     )
 
+def quat_apply_inverse(quat: list[float], vec: list[float]) -> list[float]:
+    """Apply an inverse quaternion rotation to a vector.
+
+    Args:
+        quat: The quaternion in (w, x, y, z) format.
+        vec: The vector in (x, y, z) format.
+
+    Returns:
+        The rotated vector in (x, y, z) format.
+    """
+    xyz = quat[1:]
+    w = quat[0]
+    t = 2 * np.cross(xyz, vec)
+    return vec - w * t + np.cross(xyz, t)
 
 class ThreadedIMUReader:
     """Reads BMI088 on a dedicated thread and exposes the latest sample snapshot."""

@@ -12,7 +12,7 @@ sync:
 		--exclude='cad' \
 		--exclude='docs' \
 		--exclude='src/sim' \
-		--exclude='model/mjcf' \
+		--exclude='src/model/mjcf' \
 		./ $(HOST):microban
 
 setup: sync

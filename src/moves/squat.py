@@ -30,7 +30,7 @@ class SquatMove(Move):
         lerp_duration: float = 1.0,
     ) -> None:
         super().__init__()
-        self._model_path = "model/urdf"
+        self._model_path = "src/model/urdf"
         self.frequency = frequency
         self.amplitude = amplitude
         self.lerp_duration = lerp_duration
@@ -96,7 +96,7 @@ class SquatMove(Move):
         self._initialize()
         if self._start_lerp_time_s is None:
             self._start_lerp_time_s = obs.robot_state.time_s
-            self._start_lerp_angles = [obs.robot_state.motor_angles.get(name, 0.0) for name in _LOWER_JOINTS + _UPPER_JOINTS]
+            self._start_lerp_angles = [obs.robot_state.motor_positions.get(name, 0.0) for name in _LOWER_JOINTS + _UPPER_JOINTS]
 
         t = (obs.robot_state.time_s - self._start_lerp_time_s) / self.lerp_duration
         t = min(t, 1.0)
@@ -128,7 +128,7 @@ class SquatMove(Move):
     def on_stop(self, obs: Observation, command: MotorCommand) -> None:
         if self._stop_lerp_time_s is None:
             self._stop_lerp_time_s = obs.robot_state.time_s
-            self._stop_lerp_angles = [obs.robot_state.motor_angles.get(name, 0.0) for name in _LOWER_JOINTS + _UPPER_JOINTS]
+            self._stop_lerp_angles = [obs.robot_state.motor_positions.get(name, 0.0) for name in _LOWER_JOINTS + _UPPER_JOINTS]
 
         t = (obs.robot_state.time_s - self._stop_lerp_time_s) / self.lerp_duration
         t = min(t, 1.0)

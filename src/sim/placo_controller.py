@@ -12,7 +12,7 @@ from constants import ID_TO_MOTOR, NEUTRAL_POSE, KP_DEFAULT
 class PlacoViewerController:
     """Physics-free controller that displays the robot in a MeshCat browser window."""
 
-    def __init__(self, model_path: str) -> None:
+    def __init__(self, model_path: str, dt: float) -> None:
 
         # Load robot and set neutral pose
         self._robot = placo.RobotWrapper(model_path, placo.Flags.mjcf)
@@ -30,6 +30,8 @@ class PlacoViewerController:
 
         # Track commanded angles
         self._current_angles: dict[str, float] = dict(NEUTRAL_POSE)
+        self._last_angles: dict[str, float] = dict(NEUTRAL_POSE)
+        self._dt = dt
 
     def sync_write_goal_position(self, ids: list[int], positions: list[float]) -> None:
         for motor_id, pos in zip(ids, positions):
@@ -47,6 +49,13 @@ class PlacoViewerController:
     def read_present_position(self, motor_id: int) -> float:
         name = ID_TO_MOTOR.get(motor_id, "")
         return self._current_angles.get(name, 0.0)
+
+    def sync_read_present_velocity(self, ids: list[int]) -> list[float]:
+        return [(self._last_angles.get(ID_TO_MOTOR.get(mid, ""), 0.0) - self._current_angles.get(ID_TO_MOTOR.get(mid, ""), 0.0)) / self._dt for mid in ids]
+    
+    def read_present_velocity(self, motor_id: int) -> float:
+        name = ID_TO_MOTOR.get(motor_id, "")
+        return (self._last_angles.get(name, 0.0) - self._current_angles.get(name, 0.0)) / self._dt
 
     def read_present_input_voltage(self, motor_id: int) -> float:  # noqa: ARG002
         return 80.0
