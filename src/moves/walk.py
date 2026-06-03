@@ -1,6 +1,6 @@
 import onnxruntime as ort
 
-from constants import MOTOR_TO_ID, KP_DEFAULT, KP_RL, OBSERVATION_DOF_ORDER
+from constants import MOTOR_TO_ID, KP_DEFAULT, KP_RL, OBSERVATION_DOF_ORDER, NEUTRAL_POSE
 from controller import ControllerProtocol
 from observer import Observation
 from moves.move import MotorCommand, Move, MoveState
@@ -32,9 +32,9 @@ class WalkMove(Move):
         action = ort_outs[0][0]
         self._last_action = action.tolist()
 
-        # Send commands to controller
-        ids = list(MOTOR_TO_ID.values())
-        self._controller.sync_write_goal_position(ids, action.tolist())
+        # Update command
+        for i, name in enumerate(OBSERVATION_DOF_ORDER):
+            command.target_angles[name] = NEUTRAL_POSE[name] + action[i]
 
     def build_observation(self, obs: Observation) -> list[float]:
         """Build policy observation from robot state."""
@@ -46,7 +46,7 @@ class WalkMove(Move):
         
         # Motor positions
         for name in OBSERVATION_DOF_ORDER:
-            input_obs.append(obs.robot_state.motor_positions[name])
+            input_obs.append(obs.robot_state.motor_positions[name] - NEUTRAL_POSE[name])
         
         # Motor velocities
         for name in OBSERVATION_DOF_ORDER:
