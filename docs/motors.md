@@ -24,7 +24,10 @@
 
 # Motor Setup
 
-Factory reset all motors to clear any previous configurations. Then, some specific settings need to be applied through the Dynamixel Wizard software. While scanning for motors, be sure to scan for 57600 bps and Protocol 2.0, which are the default settings after a factory reset.
+First, factory reset all motors to clear any previous configurations if they have been used before. 
+TODO: Add img of the factory reset in wizard ?
+
+Then, some specific settings need to be applied through the Dynamixel Wizard software. While scanning for motors, be sure to scan for 57600 bps and Protocol 2.0, which are the default settings after a factory reset.
 
 Apply the following settings to each motor:
     Return Delay Time: 0
