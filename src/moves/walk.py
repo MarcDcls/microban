@@ -17,6 +17,9 @@ class WalkMove(Move):
         # Load ONNX policy
         self._ort_session = ort.InferenceSession("src/agents/walk.onnx")
 
+        # Safety parameters
+        self._projected_gravity_z_threshold = -0.5  # Threshold for detecting a fall based on projected gravity
+        
     def on_start(self, obs: Observation, command: MotorCommand) -> None:
         if self._controller is not None:
             ids = list(MOTOR_TO_ID.values())
@@ -26,6 +29,10 @@ class WalkMove(Move):
     def step(self, obs: Observation, command: MotorCommand) -> None:
         input_obs = self.build_observation(obs)
 
+        # Safety check: if the robot is fallen, stop the policy
+        if obs.robot_state.projected_gravity[2] > self._projected_gravity_z_threshold:
+            return
+        
         # Run policy
         ort_inputs = {self._ort_session.get_inputs()[0].name: [input_obs]}
         ort_outs = self._ort_session.run(None, ort_inputs)
