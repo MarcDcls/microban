@@ -3,6 +3,7 @@ import time
 from dataclasses import dataclass
 import numpy as np
 
+from ahrs.common.orientation import acc2q
 from bmi088 import BMI088
 import bmi088.bmi088 as _bmi_module
 from constants import IMU_MOUNT_QUAT
@@ -106,7 +107,27 @@ class ThreadedIMUReader:
             "target_frequency_hz": 1.0 / self._period_s,
         }
 
+    def _bootstrap_orientation(self, n_samples: int = 50) -> None:
+        """Warm-start the Madgwick filter from a brief static accelerometer average.
+
+        Reads *n_samples* at the normal loop rate, averages them, and uses
+        acc2q to compute an initial quaternion (roll/pitch from gravity,yaw=0).
+        """
+        acc_sum = np.zeros(3)
+        count = 0
+        for _ in range(n_samples):
+            try:
+                ax, ay, az = self._imu.read_accelerometer()
+                acc_sum += np.array([float(ax), float(ay), float(az)])
+                count += 1
+            except Exception:
+                pass
+            time.sleep(self._period_s)
+        if count > 0:
+            self._imu.q = list(acc2q(acc_sum / count))
+
     def _run_loop(self) -> None:
+        self._bootstrap_orientation()
         next_tick = time.perf_counter()
         last_tick = next_tick
 
