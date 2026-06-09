@@ -43,6 +43,15 @@ class SquatMove(Move):
 
         self._placo_ready = False
 
+        # self._initialiation_delay_s = 5.0
+        # self._target_com_z: list[float] = []
+        # self._obs_projected_gravity_x: list[float] = []
+        # self._obs_projected_gravity_y: list[float] = []
+        # self._obs_projected_gravity_z: list[float] = []
+        # self._obs_gyro_roll: list[float] = []
+        # self._obs_gyro_pitch: list[float] = []
+        # self._obs_gyro_yaw: list[float] = []
+
     def preload(self) -> None:
         self._initialize()
 
@@ -104,14 +113,31 @@ class SquatMove(Move):
             command.target_angles[name] = self._start_lerp_angles[i] * (1.0 - t) + self._start_target_angles[i] * t
 
         if t >= 1.0:
-            self._start_lerp_time_s = None
-            self._active_start_time_s = obs.robot_state.time_s
             for i, name in enumerate(_LOWER_JOINTS + _UPPER_JOINTS):
                 self._robot.set_joint(name, self._start_target_angles[i])
             self._robot.set_T_world_frame("left_foot", self._T_left_foot)
             self._robot.update_kinematics()
             self._com_task.target_world = self._com_initial.copy()
+
+            # if self._initialiation_delay_s > 0.0:
+
+            #     self.save_state(obs)
+            #     self._initialiation_delay_s -= 0.02
+            #     return
+            
+            self._start_lerp_time_s = None
+            self._active_start_time_s = obs.robot_state.time_s
+
             self.state = MoveState.ACTIVE
+
+    # def save_state(self, obs: Observation) -> None:
+    #     self._obs_projected_gravity_x.append(obs.robot_state.projected_gravity[0])
+    #     self._obs_projected_gravity_y.append(obs.robot_state.projected_gravity[1])
+    #     self._obs_projected_gravity_z.append(obs.robot_state.projected_gravity[2])
+    #     self._obs_gyro_roll.append(obs.robot_state.gyro[0])
+    #     self._obs_gyro_pitch.append(obs.robot_state.gyro[1])
+    #     self._obs_gyro_yaw.append(obs.robot_state.gyro[2])
+    #     self._target_com_z.append(self._com_task.target_world[2])
 
     def step(self, obs: Observation, command: MotorCommand) -> None:
         t = obs.robot_state.time_s - self._active_start_time_s
@@ -125,7 +151,21 @@ class SquatMove(Move):
         for name in _LOWER_JOINTS + _UPPER_JOINTS:
             command.target_angles[name] = self._robot.get_joint(name)
 
+        # self.save_state(obs)
+
     def on_stop(self, obs: Observation, command: MotorCommand) -> None:
+        # import json
+        # with open("squat_log.json", "w") as f:
+        #     json.dump({
+        #         "obs_projected_gravity_x": self._obs_projected_gravity_x,
+        #         "obs_projected_gravity_y": self._obs_projected_gravity_y,
+        #         "obs_projected_gravity_z": self._obs_projected_gravity_z,
+        #         "obs_gyro_roll": self._obs_gyro_roll,
+        #         "obs_gyro_pitch": self._obs_gyro_pitch,
+        #         "obs_gyro_yaw": self._obs_gyro_yaw,
+        #         "target_com_z": self._target_com_z,
+        #     }, f, indent=2)
+
         if self._stop_lerp_time_s is None:
             self._stop_lerp_time_s = obs.robot_state.time_s
             self._stop_lerp_angles = [obs.robot_state.motor_positions.get(name, 0.0) for name in _LOWER_JOINTS + _UPPER_JOINTS]
