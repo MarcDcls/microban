@@ -35,22 +35,20 @@ An emphasis is placed on the range of motion of the 19 degrees of freedom of the
 
 ## 🛠️ Bill of Materials (BOM)
 
-To keep this project highly accessible, Microban relies on common hardware. Here is a quick overview of what is in the robot:
+Here is a quick overview of what is in the robot:
 
 | Component | Quantity | Description / Notes |
 | :--- | :---: | :--- |
-| **3D Printed Parts** | X | Check the CAD files. Recommended material is PLA. |
-| **Servo Motors** | 19 | XL330-M288-T from Dynamixel. |
+| **3D Printed Parts** | 26 | Check the CAD files. Recommended material is PLA. |
+| **Servo Motors** | 19 | Dynamixel XL330-M288-T servomotor. |
 | **Microcontroller**| 1 | Raspberry Pi Zero 2W. |
 | **Board Hat** | 1 | Pollen custom hat for Raspberry Pi Zero 2W |
 | **Power Supply** | 2 | 18650 3.7V Lithium-ion Batteries. |
 | **Battery Holder** | 1 | 2x18650 Battery Holder. |
 | **USB-C Charger** | 1 | Standard USB-C charger. |
 | **BMS** | 1 | Battery Management System for 2x18650 batteries. |
-| **M2x6 Plastic Screws**| X | Standard plastic screws for assembly. Recommended model is STP39. |
-| **M2.2x8 Plastic Screws**| X | Standard plastic screws for assembly. Recommended model is STP39. |
-| **20x30x0.3 Steel Shims** | 8 | X |
-| **20x30x1 POM Shims** | 4 | X |
+| **Plastic Screws**| ~200 | Standard plastic screws for assembly. |
+| **Steel & POM Shims** | 12 | Alternative to needle bearings for motors without idler horns. | 
 
 A full, detailed BOM with links to purchase and prices is available in [BOM.md](docs/material.md)
 
