@@ -10,15 +10,6 @@ Welcome to the **Microban** project!
 Microban is a ~30cm tall, fully open-source humanoid robot designed specifically for makers, students, and robotics enthusiasts. The core philosophy behind this project is **accessibility**: anyone with a standard desktop 3D printer and a few basic tools should be able to build their own Microban from scratch.
 
 The main features of Microban are:
-
-[Onshape CAD](https://cad.onshape.com/documents/d424992a192a8ce34ffce163/v/094edb3a534c5e0eac603427/e/b34620a03cc3a684006c5867?renderMode=0&uiState=6a2fb9408e6d9214d2637394)
-
----
-
-## ✨ Key Features
-
-<img width="1196" height="1773" alt="image1650" src="https://github.com/user-attachments/assets/df0143d0-566d-44a4-a285-8507b6c01a19" />
-
 *   🤖 **100% Open-Source**: Mechanics, 3D models, and documentation are entirely free to use, modify, and distribute.
 *   🖨️ **3D-Printable**: The robot is designed to be printed on any standard FDM desktop 3D printer.
 *   🔧 **DIY & Maker Friendly**: Guided assembly instructions and a detailed bill of materials make it easy for anyone to build.
@@ -26,10 +17,11 @@ The main features of Microban are:
 
 ---
 
-## 📁 Repository Structure
+## 📁 CAD Files
 
-*   `/STL` — Contains all the 3D files ready to be sliced and printed.
-*   `/STEP` — Contains the source STEP files for easy modification.
+The CAD files for Microban are in the `cad/` directory of this repository. It contains all the printable parts in both STL and STEP formats.
+
+A visual representation of the assembly can be found in the [Onshape assembly](https://cad.onshape.com/documents/d424992a192a8ce34ffce163/v/094edb3a534c5e0eac603427/e/b34620a03cc3a684006c5867?renderMode=0&uiState=6a2fb9408e6d9214d2637394).
 
 ---
 
@@ -84,3 +76,6 @@ This project is licensed under the **CERN-OHL-S-2.0** License - see the [LICENSE
 
 Screws STP39 2x6: https://de.screwerk.com/fr/shop/detail/stp/STP39A0200060B.html
 Screws STP39 2.2x8: https://de.screwerk.com/fr/shop/detail/stp/STP390220080B.html
+
+
+<img height="500" alt="image1650" src="https://github.com/user-attachments/assets/df0143d0-566d-44a4-a285-8507b6c01a19" />
