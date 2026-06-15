@@ -1,2 +1,9 @@
 - Fix squat motion to respect feet spacing
 - Implement BAM actuator in sim mode
+
+
+Documentation:
+- Add printing guide with pictures
+- Add assembly guide with Onshape screenshots, wiring instructions, cripping & soldering instructions, and a list of tools needed
+- Finalize BOM with links to purchase and prices
+- Finalize installation instructions
