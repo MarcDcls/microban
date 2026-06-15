@@ -15,9 +15,9 @@ Microban is a \~30cm tall, fully open-source humanoid robot designed specificall
 The idea behind Microban is to provide a platform for learning and experimentation in robotics. By making the design open-source, users are encouraged to modify, improve, and share their own versions of the robot. Whether you're interested in programming, mechanical design, or electronics, Microban offers a hands-on experience that can help you develop your skills in a fun and engaging way.
 
 The main features of Microban are:
-*   🤖 **100% Open-Source**: Mechanics, 3D models, and documentation are entirely free to use, modify, and distribute.
-*   🔧 **DIY & Maker Friendly**: Guided assembly instructions, fully 3D-printable parts, relatively cheap components.
-*   📏 **Compact Size**: Microban stands at approximately 30cm tall, making it the perfect desktop companion for robotics experimentation.
+*   🤖 **100% Open-Source**: Mechanics, 3D models, and documentation are entirely free to use and modify.
+*   🔧 **DIY & Maker Friendly**: Guided assembly instructions, fully 3D-printable parts and cheap components.
+*   📏 **Compact Size**: Microban is only 30cm tall, making it the perfect desktop companion for robotics experimentation.
 
 ---
 
