@@ -27,7 +27,7 @@ Here is a quick overview of what is in the robot:
 
 | Component | Quantity | Description / Notes |
 | :--- | :---: | :--- |
-| **3D Printed Parts** | 28 | Check the CAD files. Recommended material is PLA. |
+| **3D Printed Parts** | ~30 | Check the CAD files. Recommended material is PLA. |
 | **Servo Motors** | 19 | Dynamixel XL330-M288-T servomotor. |
 | **Microcontroller**| 1 | Raspberry Pi Zero 2W. |
 | **Board Hat** | 1 | Pollen custom hat for Raspberry Pi Zero 2W |
@@ -38,7 +38,7 @@ Here is a quick overview of what is in the robot:
 | **Plastic Screws**| ~200 | Standard plastic screws for assembly. |
 | **Steel & POM Shims** | 12 | Alternative to needle bearings for motors without idler horns. | 
 
-A full, detailed Bill Of Materials (BOM) with links to purchase and prices is available in [docs/bom.md](docs/bom.md)
+A full, detailed Bill Of Materials (BOM) with links to purchase and prices is available [here](docs/bom.md)
 
 ---
 
