@@ -2,6 +2,8 @@
 
 This guide provides detailed instructions on how to print the parts for the Microban robot. It covers recommended settings, orientations, and tips to ensure successful prints. 
 
+TODO: Add idle horns + explanation
+TODO: Orientation image
 
 ## Recommended Settings
 
