@@ -8,7 +8,7 @@ At any point during the assembly, you can refer to the [Onshape assembly](https:
 
 ## Motor Setup
 
-### Motor IDs
+The first step in the assembly process is to set up the motors. I highly recommend writing the motor IDs directly on them to avoid mixing them up during configuration and assembly. The following table lists the motor names and their corresponding IDs:
 
 | Motor Name | ID |
 |------------|----|
@@ -32,18 +32,23 @@ At any point during the assembly, you can refer to the [Onshape assembly](https:
 | Right Elbow | 43 |
 | Head | 51 |
 
-### Motor Configuration
+To configure all the motors, connect one motor at a time to your PC using the U2D2 kit as presented in the image below. 
 
-First, factory reset all motors to clear any previous configurations if they have been used before. 
-TODO: Add img of the factory reset in wizard ?
+<img width="100%" alt="image" src="https://github.com/user-attachments/assets/240468b4-6963-4800-a00a-176226eb9185" />
 
-Then, some specific settings need to be applied through the Dynamixel Wizard software. While scanning for motors, be sure to scan for 57600 bps and Protocol 2.0, which are the default settings after a factory reset.
+<br>
+<br>
 
-Apply the following settings to each motor:
-    Return Delay Time: 0
-    Baud Rate: 3 (1Mbps)
-    Shutdown: 52 (Removing "Bit 0 Input voltage error")
-    PWM Slope: 255 (no slope)
+Then, launch [Dynamixel Wizard](https://emanual.robotis.com/docs/en/software/dynamixel/dynamixel_wizard2/). If your XL330 motor is not new, perform a factory reset by clicking on the "Recovery" button, selecting the XL-330-288 model and following the instructions. 
+
+In the "Option" tab, select "Protocol 2.0", "57600 bps" as the baud rate, and verify that the correct COM port is selected. Then, click on the "Scan" button to detect the motor. Once the motor is detected, you can set the following parameters (and click on the "Save" button to save the settings):
+- ID: the ID of the motor as listed in the table above
+- Baud Rate: 3 (1Mbps)
+- Return Delay Time: 0
+- PWM Slope: 255 (no slope)
+- Shutdown: 52 (Removing "Bit 0 Input voltage error")
+
+Once the parameters are set, you can disconnect the motor and move on to the next one. If you want to check the motors at the end, you can connect them together as their IDs are set. You will need to change the baud rate of the scan to 1Mbps as it as been changed during the configuration. 
 
 ---
 
