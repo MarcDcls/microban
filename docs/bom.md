@@ -4,7 +4,7 @@ Here is a detailed Bill of Materials (BOM) for the project, including links to p
 
 At the time of writing, **a Microban robot costs approximately $547**.
 
-If you also include the configuration tools (Dynamixel U2D2 and U2D2 Power Hub), the total cost rises to approximately $598.
+If you also include the configuration tools (Dynamixel U2D2 and U2D2 Power Hub), the total cost rises to approximately $603.
 
 
 ## Robot Components
@@ -39,8 +39,9 @@ In addition to the components that make up the robot, you will also need configu
 | :--- | :---: | :--- | :--- | :--- |
 | Dynamixel U2D2 | 1 | $32.10 | [Robotis](https://en.robotis.com/shop_en/item.php?it_id=902-0132-000) | USB to Dynamixel adapter for motor configuration. |
 | Dynamixel U2D2 Power Hub | 1 | $19.00 | [Robotis](https://en.robotis.com/shop_en/item.php?it_id=902-0145-001) | Power hub for U2D2. |
+| 5V DC Power Supply | 1 | ~$5.00 | [AliExpress](https://fr.aliexpress.com/item/1005006681380264.html?src=google&src=google&albch=shopping&acnt=248-630-5778&isdl=y&slnk=&plac=&mtctp=&albbt=Google_7_shopping&aff_platform=google&aff_short_key=UneMJZVf&gclsrc=aw.ds&albagn=888888&ds_e_adid=&ds_e_matchtype=&ds_e_device=c&ds_e_network=x&ds_e_product_group_id=&ds_e_product_id=fr1005006681380264&ds_e_product_merchant_id=109233876&ds_e_product_country=FR&ds_e_product_language=fr&ds_e_product_channel=online&ds_e_product_store_id=&ds_url_v=2&albcp=19000710609&albag=&isSmbAutoCall=false&needSmbHouyi=false&gad_source=1&gad_campaignid=17725339642&gbraid=0AAAAACWaBweuoiaNc4XiSTkGHPjyMW6GD&gclid=Cj0KCQjwrs7RBhDuARIsAIVfBD0W5aMl1lU2v3nhWRxGFVcibpgHUv8IFQLeOQACU-XE4MzK3mm_oPoaArMQEALw_wcB) | 5V DC power supply for U2D2 Power Hub. Does not require a lot of current, it is only needed for the initial configuration. |
 
-In case of building several robots, it is not necessary to buy several U2D2 and U2D2 Power Hub, as they are only required for the initial configuration of the motors. 
+In case of building several robots, it is not necessary to buy several U2D2 sets, as they are only required for the initial configuration of the motors. 
 
 
 ## Optional Components
