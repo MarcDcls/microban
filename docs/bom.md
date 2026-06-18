@@ -68,3 +68,5 @@ For all these reasons, here are some optional components you may want to conside
 ---
 
 Once you have all the components, you can proceed to print the parts. Follow the [Printing Guide](printing.md) for detailed instructions.
+
+If you already have the parts printed and the components purchased, you can directly proceed to the assembly of the robot by following the [Assembly Guide](assembly.md).
