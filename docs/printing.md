@@ -2,8 +2,6 @@
 
 This guide provides detailed instructions on how to print the parts for the Microban robot. It covers recommended settings, orientations, and tips to ensure successful prints. 
 
-TODO: Add idle horns + explanation
-TODO: Orientation image
 
 ## Recommended Settings
 
@@ -35,14 +33,17 @@ The parts are available in the `cad/stl/` directory of this repository, and they
 
 ## Part Orientation 
 
-The parts that support the plain bearings (POM washers sandwiched between steel shims) should be printed in a specific orientation to ensure proper fit and surface finish. These orientations can increase the required support material, but they are necessary to ensure that the bearings fit correctly and that the parts function as intended. 
-
-The following image show the recommended orientation for printing these parts, which are: 
+The parts that support the plain bearings (POM washers sandwiched between steel shims) should be printed in a specific orientation to ensure proper fit and surface finish. These orientations can increase the required support material, but they are necessary to ensure that the bearings fit correctly and that the parts function as intended. These parts are: 
 - `hip.stl`
 - `pelvis.stl`  
 - `arm_bearing_support.stl`
 - `shoulder.stl`
 
-
+The following parts also require specific orientations to ensure proper fit and alignment with the motors:
+- `idle_horn.stl`
+- `idle_cap.stl`
+- `radius.stl`
 
 For all the other parts, the orientation is quite straightforward, and they can be printed without the need of support material for most of them.
+
+The following images show the recommended orientations for the parts listed above.
