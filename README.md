@@ -60,7 +60,7 @@ To build your own Microban, you will need to follow these steps:
 
 1. **Source the hardware:** Gather the components listed in the [BOM](docs/bom.md). Links are provided to purchase each item, but feel free to source them from your preferred suppliers. Some components, like the Dynamixel motors, may have specific distributors depending on your location, which can impact the total cost. 
 
-2. **Print the parts:** Head over to the `cad/stl/` folder and print all the parts using a 3D printer. The recommended filament is PLA with a layer height of 0.12mm and a 15% infill. Some parts require specific orientations for printing to ensure strength and proper fit. Refer to the guide [docs/printing.md](docs/printing.md) for detailed instructions on how to print each part correctly.
+2. **Print the parts:** Head over to the `cad/stl/` folder and print all the parts using a 3D printer. The recommended filament is PLA with a layer height of 0.12mm and a 15% infill. Some parts require specific orientations for printing to ensure strength and proper fit. Refer to the [Printing Guide](docs/printing.md) for detailed instructions on how to print each part correctly.
 
 3. **Assemble:** Follow our step-by-step [Assembly Guide](docs/assembly.md) to put the mechanics together.
 
