@@ -52,3 +52,8 @@ The following images show the recommended orientations for the parts listed abov
 <br>
 
 For all the other parts, the orientation is quite straightforward, and they can be printed without the need of support material for a lot of them.
+
+
+---
+
+Once you have all the parts, if you already purchased the necessary components listed in the [BOM](bom.md), you can proceed to assemble the robot by following the [Assembly Guide](assembly.md).
