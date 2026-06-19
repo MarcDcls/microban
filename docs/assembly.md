@@ -4,9 +4,19 @@ This guide provides detailed instructions on how to assemble the parts for the M
 
 At any point during the assembly, you can refer to the [Onshape assembly](https://cad.onshape.com/documents/d424992a192a8ce34ffce163/v/7de3e6e40f0e1185d169e6d9/e/b34620a03cc3a684006c5867?renderMode=0&uiState=6a2fccab8e6d9214d2644ca7) to see how the parts fit together.
 
+The steps to assemble the robot are as follows:
+1. [Motor Setup](#motor-setup): Configure the motors using the Dynamixel Wizard software.
+2. [Cable Setup](#cable-setup): Prepare all the cables necessary for the assembly. 
+3. [Leg Assembly](#leg-assembly): Assemble the legs of the robot.
+4. [Torso Assembly](#torso-assembly): Assemble the torso and arms of the robot.
+5. [Trunk Top Assembly](#trunk-top-assembly): Assemble the top of the trunk and the head of the robot.
+6. [Battery Module Assembly](#battery-module-assembly): Assemble the battery module.
+7. [Final Assembly](#final-assembly): Assemble all the parts together to complete the robot.
+
+
 ---
 
-## Motor Setup
+## 1. Motor Setup
 
 The first step in the assembly process is to set up the motors. I highly recommend writing the motor IDs directly on them to avoid mixing them up during configuration and assembly. The following table lists the motor names and their corresponding IDs:
 
@@ -52,7 +62,7 @@ Once the parameters are set, you can disconnect the motor and move on to the nex
 
 ---
 
-## Cable Routing
+## 2. Cable Setup
 
 The XL330 motors used in the Microban robot are daisy-chained, which means that the motors are connected in series. This allows to limit the number of cables that need to be routed through the robot. The only exception is near the board, where the first cables are split to connect to several links. The following diagram shows how the motors are connected to each other and to the board, and what cable lengths are used for each connection. 
 
@@ -61,11 +71,12 @@ The XL330 motors used in the Microban robot are daisy-chained, which means that 
 <br>
 <br>
 
-To create the 1-to-2 splitter cable, you can cut 2 cables of 180mm to obtain 3 half-cables of approximately 50mm (you don't need more length than that). Then, you can solder 2 of them to the 3rd one. Do not forget to insulate the soldered connections with heat shrink tubing. The following images shows how to cut the cables and how the splitter cable should look like.
+The 
 
-[]
+To create the 1-to-2 splitter cable, you can cut 2 cables of 180mm to obtain 3 half-cables of approximately 50mm (you don't need more length than that). Then, you can solder 2 of them to the 3rd one. Do not forget to insulate the soldered connections with heat shrink tubing. To do the 1-to-3 splitter cable, the process is the same, but one of the 3 outgoing cables should be longer than the other two to allow for the robot opening from the top. So you should cut 2 cables of 180mm into 3 half-cables of approximately 50mm and one half-cable of approximately 120-130mm. The following images shows how the splitter cable should look like.
 
-To do the 1-to-3 splitter cable, the process is the same, but one of the 3 outgoing cables should be longer than the other two to allow for the robot opening from the top. So you should cut 2 cables of 180mm into 3 half-cables of approximately 50mm and one half-cable of approximately 120-130mm.
+<img width="100%" alt="image190" src="https://github.com/user-attachments/assets/9384e878-72db-4b22-9de8-bbf1af28c7f9" />
+
 
 ### Splitter Cable
 
