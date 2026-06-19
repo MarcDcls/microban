@@ -5,13 +5,13 @@ This guide provides detailed instructions on how to assemble the parts for the M
 At any point during the assembly, you can refer to the [Onshape assembly](https://cad.onshape.com/documents/d424992a192a8ce34ffce163/v/7de3e6e40f0e1185d169e6d9/e/b34620a03cc3a684006c5867?renderMode=0&uiState=6a2fccab8e6d9214d2644ca7) to see how the parts fit together.
 
 The steps to assemble the robot are as follows:
-1. [Motor Setup](#motor-setup): Configure the motors using the Dynamixel Wizard software.
-2. [Cable Setup](#cable-setup): Prepare all the cables necessary for the assembly. 
-3. [Leg Assembly](#leg-assembly): Assemble the legs of the robot.
-4. [Torso Assembly](#torso-assembly): Assemble the torso and arms of the robot.
-5. [Trunk Top Assembly](#trunk-top-assembly): Assemble the top of the trunk and the head of the robot.
-6. [Battery Module Assembly](#battery-module-assembly): Assemble the battery module.
-7. [Final Assembly](#final-assembly): Assemble all the parts together to complete the robot.
+1. [Motor Setup](#1-motor-setup): Configure the motors using the Dynamixel Wizard software.
+2. [Cable Setup](#2-cable-setup): Prepare all the cables necessary for the assembly. 
+3. [Leg Assembly](#3-leg-assembly): Assemble the legs of the robot.
+4. [Torso Assembly](#4-torso-assembly): Assemble the torso and arms of the robot.
+5. [Trunk Top Assembly](#5-trunk-top-assembly): Assemble the top of the trunk and the head of the robot.
+6. [Battery Module Assembly](#6-battery-module-assembly): Assemble the battery module.
+7. [Final Assembly](#7-final-assembly): Assemble all the parts together to complete the robot.
 
 
 ---
@@ -68,18 +68,20 @@ The XL330 motors used in the Microban robot are daisy-chained, which means that 
 
 <img width="100%" alt="routing" src="https://github.com/user-attachments/assets/fd655925-4968-4892-afc6-e4fe00495b89" />
 
-<br>
-<br>
+### Splitter Cable
 
-The 
+To create the 1-to-2 splitter cable, you can cut 2 cables of 180mm to obtain 3 half-cables of approximately 50mm (you don't need more length than that). Then, you can solder 2 of them to the 3rd one. Do not forget to insulate the soldered connections with heat shrink tubing. 
 
-To create the 1-to-2 splitter cable, you can cut 2 cables of 180mm to obtain 3 half-cables of approximately 50mm (you don't need more length than that). Then, you can solder 2 of them to the 3rd one. Do not forget to insulate the soldered connections with heat shrink tubing. To do the 1-to-3 splitter cable, the process is the same, but one of the 3 outgoing cables should be longer than the other two to allow for the robot opening from the top. So you should cut 2 cables of 180mm into 3 half-cables of approximately 50mm and one half-cable of approximately 120-130mm. The following images shows how the splitter cable should look like.
+To do the 1-to-3 splitter cable, the process is the same, but one of the 3 outgoing cables should be longer than the other two to allow for the robot opening from the top. So you should cut 2 cables of 180mm into 3 half-cables of approximately 50mm and one half-cable of approximately 120-130mm. 
+
+The following images shows how the splitter cable should look like.
 
 <img width="100%" alt="image190" src="https://github.com/user-attachments/assets/9384e878-72db-4b22-9de8-bbf1af28c7f9" />
 
-
-### Splitter Cable
-
-Two splitter cables are used to connect the first 
-
 ### Reducing Cable Length
+
+To reduce the length of the 180mm cables, you can cut them to the desired length and solder the ends back together, but it can lead to a weak connection and communication issues. A better solution is to re-crimp the cables to the desired length. To do this, you will need a crimping tool, JST EH crimp terminals, and optionally a wire stripper. You can check the [BOM](bom.md) for references.
+
+<img width="100%" alt="image922" src="https://github.com/user-attachments/assets/e0d045f5-8e5a-4335-8f9a-7266d1a41eca" />
+
+
