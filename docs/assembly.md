@@ -68,7 +68,7 @@ The XL330 motors used in the Microban robot are daisy-chained, which means that 
 
 <img width="100%" alt="routing" src="https://github.com/user-attachments/assets/fd655925-4968-4892-afc6-e4fe00495b89" />
 
-### Splitter Cable
+### 2.1 Splitter Cable
 
 To create the 1-to-2 splitter cable, you can cut 2 cables of 180mm to obtain 3 half-cables of approximately 50mm (you don't need more length than that). Then, you can solder 2 of them to the 3rd one. Be careful to solder together the same wires, as an incorrect connection can damage permanently the motors. Do not forget to insulate the soldered connections with heat shrink tubing. 
 
@@ -78,7 +78,7 @@ The following images shows how the splitter cable should look like.
 
 <img width="100%" alt="image190" src="https://github.com/user-attachments/assets/9384e878-72db-4b22-9de8-bbf1af28c7f9" />
 
-### Reducing Cable Length
+### 2.2 Reducing Cable Length
 
 To reduce the length of the 180mm cables, you can cut them to the desired length and solder the ends back together, but it can lead to a weak connection and communication issues. A better solution is to re-crimp the cables to the desired length. To do this, you will need a crimping tool, JST EH crimp terminals, and optionally a wire stripper. You can check the [BOM](bom.md) for references.
 
@@ -104,3 +104,40 @@ Finally, you can insert the 3 crimped terminals into the plastic housing. The or
 
 ## 3. Leg Assembly
 
+The objective of this section is to assemble the legs of the robot and fix them to the pelvis. 
+
+<img width="100%" alt="image" src="https://github.com/user-attachments/assets/e3254867-ebaf-4d84-9591-d567e8b5ae8d" />
+
+<br>
+<br>
+
+For the assembly, you should refer to the [Onshape assembly](https://cad.onshape.com/documents/d424992a192a8ce34ffce163/v/7de3e6e40f0e1185d169e6d9/e/b34620a03cc3a684006c5867?renderMode=0&uiState=6a2fccab8e6d9214d2644ca7) to see how the parts fit together. Nevertheless, some parts of the assembly require specific instructions and are detailed in the following sub-sections.
+
+### 3.1 Double-Motor Blocks
+
+For the double-motor blocks used in the ankle and hip joints of the robot, you should pay attention to the cable routing, as the motors are very close to each other. Specifically, the cable connected to the bus between the two motors should be plugged before sliding the motors into the double-motor block. It concerns the cable relying the two motors, as well as the cable connecting the double-motor block to the next motor in the chain. The following images show you the assembly process on a right ankle double-motor block. 
+
+Cable routing before sliding the motors into the double-motor block (do not forget the spacer):
+
+<img width="100%" alt="image" src="https://github.com/user-attachments/assets/ff3f5251-780d-4131-92e5-6077fda5364f" />
+
+<br>
+<br>
+
+Result after sliding the motors into the double-motor block:
+
+<img height="300px" alt="image" src="https://github.com/user-attachments/assets/516b395e-33f1-4191-89f8-fbd971a374ba" />
+<img height="300px" alt="image" src="https://github.com/user-attachments/assets/6550922b-200f-4813-9464-048147ae67f7" />
+
+### 3.2 Cable Routing 
+
+For the cable lengths, refers to the [Cable Setup](#2-cable-setup) section. You should use the cable sockets on the tibia, femur and hip double-motor blocks to route the cables through the robot. 
+For the tibia and femur routing, you can check the first image of the section. For the hip double-motor block, you can check the image below. 
+
+<img width="100%" alt="image" src="https://github.com/user-attachments/assets/1f9419be-4711-42d0-bb36-5c9a4933c496" />
+
+### 3.3 Feet Adhesion
+
+To increase the adhesion of the feet to the ground, you can add an optional layer of rubber on the bottom of the feet. You can use a rubber sheet or cut a piece of an old cycling tire. 
+
+<img width="100%" alt="image" src="https://github.com/user-attachments/assets/85b68480-c078-4cdb-8431-d062476647ee" />
