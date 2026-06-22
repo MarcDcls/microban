@@ -1,5 +1,6 @@
 import math
 import time
+from collections import deque
 from collections.abc import Callable
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -13,6 +14,18 @@ if TYPE_CHECKING:
 from constants import MOTOR_TO_ID, ID_TO_MOTOR, NEUTRAL_POSE, KP_GAIN_PRM
 
 
+class _DelayBuffer:
+    """Returns values delayed by n_steps ticks (0 = no delay)."""
+
+    def __init__(self, initial, n_steps: int) -> None:
+        size = max(1, n_steps + 1)
+        self._buf: deque = deque([initial] * size, maxlen=size)
+
+    def push_and_read(self, value):
+        self._buf.appendleft(value)
+        return self._buf[-1]
+
+
 class MuJoCoController:
     """MuJoCo-backed controller."""
 
@@ -22,6 +35,8 @@ class MuJoCoController:
         key_callback: Callable[[int, int, int, int], None] | None = None,
         stop_flag_path: str = "/tmp/microban_scheduler.stop",
         reset_source: "MuJoCoInputSource | None" = None,
+        delay_motor_ticks: int = 1,
+        delay_imu_ticks: int = 1,
     ) -> None:
         self._stop_flag_path = Path(stop_flag_path)
         self._reset_source = reset_source
@@ -54,6 +69,21 @@ class MuJoCoController:
             if name in self._name_to_actuator_idx:
                 self._data.ctrl[self._name_to_actuator_idx[name]] = angle
         mujoco.mj_forward(self._model, self._data)
+
+        # Delay buffers — simulate sensor/communication latency
+        self._delay_pos = {
+            mid: _DelayBuffer(
+                self._data.qpos[self._name_to_qpos_idx[ID_TO_MOTOR[mid]]],
+                delay_motor_ticks,
+            )
+            for mid in MOTOR_TO_ID.values()
+        }
+        self._delay_vel = {
+            mid: _DelayBuffer(0.0, delay_motor_ticks)
+            for mid in MOTOR_TO_ID.values()
+        }
+        self._delay_gyro = _DelayBuffer((0.0, 0.0, 0.0), delay_imu_ticks)
+        self._delay_quat = _DelayBuffer((1.0, 0.0, 0.0, 0.0), delay_imu_ticks)
 
         self._viewer = mujoco.viewer.launch_passive(
             self._model, self._data, key_callback=key_callback
@@ -119,18 +149,32 @@ class MuJoCoController:
         self._viewer.sync()
 
     def sync_read_present_position(self, ids: list[int]) -> list[float]:
-        return [self._data.qpos[self._name_to_qpos_idx[ID_TO_MOTOR[motor_id]]] for motor_id in ids]
+        return [
+            self._delay_pos[mid].push_and_read(
+                self._data.qpos[self._name_to_qpos_idx[ID_TO_MOTOR[mid]]]
+            )
+            for mid in ids
+        ]
 
     def read_present_position(self, motor_id: int) -> float:
         name = ID_TO_MOTOR[motor_id]
-        return float(self._data.qpos[self._name_to_qpos_idx[name]])
+        return float(self._delay_pos[motor_id].push_and_read(
+            self._data.qpos[self._name_to_qpos_idx[name]]
+        ))
 
     def sync_read_present_velocity(self, ids: list[int]) -> list[float]:
-        return [self._data.qvel[self._name_to_qvel_idx[ID_TO_MOTOR[motor_id]]] for motor_id in ids]
+        return [
+            self._delay_vel[mid].push_and_read(
+                self._data.qvel[self._name_to_qvel_idx[ID_TO_MOTOR[mid]]]
+            )
+            for mid in ids
+        ]
 
     def read_present_velocity(self, motor_id: int) -> float:
         name = ID_TO_MOTOR[motor_id]
-        return float(self._data.qvel[self._name_to_qvel_idx[name]])
+        return float(self._delay_vel[motor_id].push_and_read(
+            self._data.qvel[self._name_to_qvel_idx[name]]
+        ))
 
     def sync_read_present_input_voltage(self, ids: list[int]) -> list[float]:
         return [80.0] * len(ids)
@@ -151,20 +195,22 @@ class MuJoCoController:
         return float(gx), float(gy), float(-gz)
 
     def read_gyro(self) -> tuple[float, float, float]:
-        """Return (gx, gy, gz) in rad/s from the 'angular-velocity' gyro sensor."""
         if self._sensor_gyro < 0:
-            return 0.0, 0.0, 0.0
-        adr = self._model.sensor_adr[self._sensor_gyro]
-        gx, gy, gz = self._data.sensordata[adr:adr + 3]
-        return float(gx), float(gy), float(gz)
+            current = (0.0, 0.0, 0.0)
+        else:
+            adr = self._model.sensor_adr[self._sensor_gyro]
+            gx, gy, gz = self._data.sensordata[adr:adr + 3]
+            current = (float(gx), float(gy), float(gz))
+        return self._delay_gyro.push_and_read(current)
 
     def read_quat(self, dt: float) -> tuple[float, float, float, float]:
-        """Return orientation quaternion (w, x, y, z) from the 'orientation' framequat sensor."""
         if self._sensor_orientation < 0:
-            return 1.0, 0.0, 0.0, 0.0
-        adr = self._model.sensor_adr[self._sensor_orientation]
-        w, x, y, z = self._data.sensordata[adr:adr + 4]
-        return float(w), float(x), float(y), float(z)
+            current = (1.0, 0.0, 0.0, 0.0)
+        else:
+            adr = self._model.sensor_adr[self._sensor_orientation]
+            w, x, y, z = self._data.sensordata[adr:adr + 4]
+            current = (float(w), float(x), float(y), float(z))
+        return self._delay_quat.push_and_read(current)
 
     def reset(self) -> None:
         """Reset the simulation to the initial neutral standing pose."""

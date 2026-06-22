@@ -6,7 +6,6 @@ Usage:
 """
 
 import argparse
-import pathlib
 
 from scheduler import Scheduler
 from sim.mujoco_input import MuJoCoInputSource
@@ -19,6 +18,8 @@ from moves.walk import WalkMove
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run microban scheduler in MuJoCo simulation.")
     parser.add_argument("--hz", type=float, default=50.0, metavar="FREQ", help="Scheduler frequency in Hz (default: 50)")
+    parser.add_argument("--delay-motor", type=int, default=0, metavar="TICKS", help="Motor position/velocity read delay in ticks (default: 1 tick = 20 ms at 50 Hz)")
+    parser.add_argument("--delay-imu", type=int, default=0, metavar="TICKS", help="IMU gyro/quat read delay in ticks (default: 1 tick= 20 ms at 50 Hz)")
     args = parser.parse_args()
 
     input_source = MuJoCoInputSource(move_keys={"h": "head", "s": "squat", "v": "walk"})
@@ -26,6 +27,8 @@ def main() -> None:
         mjcf_path="src/model/mjcf/scene.xml",
         key_callback=input_source.key_callback,
         reset_source=input_source,
+        delay_motor_ticks=args.delay_motor,
+        delay_imu_ticks=args.delay_imu,
     )
     input_source.set_viewer_opt(controller.viewer_opt)
 
