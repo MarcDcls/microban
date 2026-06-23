@@ -18,7 +18,7 @@ The idea behind Microban is to provide a platform for learning and experimentati
 The main features of Microban are:
 *   🤖 **100% Open-Source**: Mechanics, 3D models, and documentation are entirely free to use and modify.
 *   🔧 **DIY & Maker Friendly**: Guided assembly instructions, fully 3D-printable parts and cheap components.
-*   📏 **Compact Size**: Microban is only 30cm tall, making it the perfect desktop companion for robotics experimentation.
+*   📏 **Compact Size**: Microban is only 30cm tall and can be recharged via USB-C, making it the perfect desktop companion for robotics experimentation.
 
 ---
 
