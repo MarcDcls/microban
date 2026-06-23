@@ -74,9 +74,9 @@ KP_RL: int = 125             # ~0.277 Nm/rad in MuJoCo
 KP_GAIN_PRM: float = 0.0022  # Nm/rad per register unit (for Xl330)
 
 # BAM motor model (bam package, XL330 m6)
-BAM_VIN: float = 7.5  # XL330 nominal supply voltage (V)
-BAM_VIN_MIN: float = 4.8
-BAM_VOLTAGE_DROP_GAIN: float = 1.5
+BAM_VIN: float = 7.5 
+BAM_VIN_MIN: float = 6.5
+BAM_VOLTAGE_DROP_GAIN: float = 0.2
 
 # IMU (BMI088) I2C bus number on the Raspberry Pi
 IMU_I2C_BUS: int = 1
