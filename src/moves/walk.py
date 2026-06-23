@@ -7,9 +7,6 @@ from observer import Observation
 from moves.move import MotorCommand, Move, MoveState
 
 
-# Set to True if the policy use a reference phase for the gait cycle
-USE_REFERENCE_PHASE = True
-
 # Set to True to log motor positions and voltages during the walk move
 # Note: requires to set observe_voltage = True in the Observer to log voltages
 LOGGING = False
@@ -32,7 +29,11 @@ class WalkMove(Move):
         positions = [float(v) for v in meta["default_joint_pos"].split(",")]
         self._default_pose: dict[str, float] = dict(zip(names, positions))
 
-        # Reference phase for gait cycle
+        # Detect reference phase from model input size:
+        # base_obs = gyro(3) + proj_grav(3) + pos(N) + vel(N) + action(N) + cmd(3)
+        # phase_obs = base_obs + phase(2)
+        base_obs_size = 3 + 3 + 3 * len(OBSERVATION_DOF_ORDER) + 3
+        self._use_reference_phase: bool = self._ort_session.get_inputs()[0].shape[1] > base_obs_size
         self._phase_step = 0
         self._phase_total_steps = 20
 
@@ -91,7 +92,7 @@ class WalkMove(Move):
 
     def step(self, obs: Observation, command: MotorCommand) -> None:
         # Update reference phase
-        if USE_REFERENCE_PHASE:
+        if self._use_reference_phase:
             commanded_vel = np.mean([np.abs(obs.user_input.velocity["vx"]), np.abs(obs.user_input.velocity["vy"]), np.abs(obs.user_input.velocity["vtheta"])])
             if commanded_vel > 0.01:
                 self._phase_step += 1
@@ -144,7 +145,7 @@ class WalkMove(Move):
         input_obs.append(obs.user_input.velocity["vtheta"])
 
         # Reference phase
-        if USE_REFERENCE_PHASE:
+        if self._use_reference_phase:
             reference_phase = (self._phase_step % self._phase_total_steps) / self._phase_total_steps * 2 * np.pi
             input_obs.append(np.cos(reference_phase))
             input_obs.append(np.sin(reference_phase))
