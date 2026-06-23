@@ -27,6 +27,10 @@ class _DelayBuffer:
         self._buf.appendleft(value)
         return self._buf[-1]
 
+    def fill(self, value) -> None:
+        for i in range(len(self._buf)):
+            self._buf[i] = value
+
 
 class MuJoCoController:
     """MuJoCo-backed controller."""
@@ -37,10 +41,14 @@ class MuJoCoController:
         key_callback: Callable[[int, int, int, int], None] | None = None,
         stop_flag_path: str = "/tmp/microban_scheduler.stop",
         reset_source: "MuJoCoInputSource | None" = None,
+        # Actuation delay (command → motor), in simulator steps (default timestep: 0.005 s)
+        delay_act_steps: int = 0,
+        # Sensor delays (motor/IMU → observation), in scheduler ticks (default: 0.02 s)
         delay_pos_ticks: int = 0,
         delay_vel_ticks: int = 0,
         delay_gyro_ticks: int = 0,
         delay_quat_ticks: int = 0,
+        trunk_com_offset: tuple[float, float, float] = (0.0, 0.0, 0.0),
     ) -> None:
         self._stop_flag_path = Path(stop_flag_path)
         self._reset_source = reset_source
@@ -65,6 +73,13 @@ class MuJoCoController:
         self._torque_interval = 0.1
         self._last_torque_print = 0.0
 
+        # Apply CoM offset on trunk body (simulates inertial model error)
+        if any(v != 0.0 for v in trunk_com_offset):
+            trunk_id = mujoco.mj_name2id(self._model, mujoco.mjtObj.mjOBJ_BODY, "trunk")
+            self._model.body_ipos[trunk_id, 0] += trunk_com_offset[0]
+            self._model.body_ipos[trunk_id, 1] += trunk_com_offset[1]
+            self._model.body_ipos[trunk_id, 2] += trunk_com_offset[2]
+
         # Set initial pose to neutral so the robot starts upright
         self._data.qpos[2] = 0.165
         for name, angle in NEUTRAL_POSE.items():
@@ -86,6 +101,13 @@ class MuJoCoController:
         }
         self._delay_gyro = _DelayBuffer((0.0, 0.0, 0.0), delay_gyro_ticks)
         self._delay_quat = _DelayBuffer((1.0, 0.0, 0.0, 0.0), delay_quat_ticks)
+        self._delay_act = {
+            mid: _DelayBuffer(
+                self._data.qpos[self._name_to_qpos_idx[ID_TO_MOTOR[mid]]],
+                delay_act_steps,
+            )
+            for mid in MOTOR_TO_ID.values()
+        }
 
         # BAM motor model — XL330 m6 (DC motor + Stribeck + load-dependent friction)
         bam_model = bam_load_model(motor_name="xl330", model="m6")
@@ -134,10 +156,12 @@ class MuJoCoController:
             self._stop_flag_path.write_text("stop\n", encoding="ascii")
             return
 
-        for motor_id, pos in zip(ids, positions):
-            self._bam.set_q_target(ID_TO_MOTOR[motor_id], pos)
+        cmd = dict(zip(ids, positions))
 
         for _ in range(self._steps_per_tick):
+            for motor_id, pos in cmd.items():
+                delayed_pos = self._delay_act[motor_id].push_and_read(pos)
+                self._bam.set_q_target(ID_TO_MOTOR[motor_id], delayed_pos)
             self._bam.update()
             mujoco.mj_step(self._model, self._data)
 
@@ -229,4 +253,7 @@ class MuJoCoController:
                 self._data.qpos[self._name_to_qpos_idx[name]] = angle
         mujoco.mj_forward(self._model, self._data)
         self._bam.reset(self._data.qpos)
+        for mid in MOTOR_TO_ID.values():
+            neutral = self._data.qpos[self._name_to_qpos_idx[ID_TO_MOTOR[mid]]]
+            self._delay_act[mid].fill(neutral)
         self._viewer.sync()

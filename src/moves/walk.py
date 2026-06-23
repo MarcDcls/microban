@@ -12,7 +12,7 @@ from moves.move import MotorCommand, Move, MoveState
 LOGGING = False
 
 # Policy name
-AGENT_NAME = "walk_vin_drop.onnx"
+AGENT_NAME = "walk_obs_delay.onnx"
 
 
 class WalkMove(Move):
