@@ -25,7 +25,7 @@ http://www.apache.org/licenses/LICENSE-2.0
     </default>
     <default class="xl330">
       <joint damping="0.041" frictionloss="0.013" armature="0.0018"/>
-      <position kp="0.886" kv="0.0" forcerange="-0.77 0.77"/>
+      <motor gear="1"/>
     </default>
   </default>
   <sensor>
@@ -594,25 +594,25 @@ http://www.apache.org/licenses/LICENSE-2.0
     <material name="tibia__configuration_left_material" rgba="0.501961 0.501961 0.501961 1"/>
   </asset>
   <actuator>
-    <position class="xl330" name="head" joint="head" inheritrange="1"/>
-    <position class="xl330" name="right_shoulder_pitch" joint="right_shoulder_pitch" inheritrange="1"/>
-    <position class="xl330" name="right_shoulder_roll" joint="right_shoulder_roll" inheritrange="1"/>
-    <position class="xl330" name="right_elbow" joint="right_elbow" inheritrange="1"/>
-    <position class="xl330" name="right_hip_yaw" joint="right_hip_yaw" inheritrange="1"/>
-    <position class="xl330" name="right_hip_roll" joint="right_hip_roll" inheritrange="1"/>
-    <position class="xl330" name="right_hip_pitch" joint="right_hip_pitch" inheritrange="1"/>
-    <position class="xl330" name="right_knee" joint="right_knee" inheritrange="1"/>
-    <position class="xl330" name="right_ankle_pitch" joint="right_ankle_pitch" inheritrange="1"/>
-    <position class="xl330" name="right_ankle_roll" joint="right_ankle_roll" inheritrange="1"/>
-    <position class="xl330" name="left_shoulder_pitch" joint="left_shoulder_pitch" inheritrange="1"/>
-    <position class="xl330" name="left_shoulder_roll" joint="left_shoulder_roll" inheritrange="1"/>
-    <position class="xl330" name="left_elbow" joint="left_elbow" inheritrange="1"/>
-    <position class="xl330" name="left_hip_yaw" joint="left_hip_yaw" inheritrange="1"/>
-    <position class="xl330" name="left_hip_roll" joint="left_hip_roll" inheritrange="1"/>
-    <position class="xl330" name="left_hip_pitch" joint="left_hip_pitch" inheritrange="1"/>
-    <position class="xl330" name="left_knee" joint="left_knee" inheritrange="1"/>
-    <position class="xl330" name="left_ankle_pitch" joint="left_ankle_pitch" inheritrange="1"/>
-    <position class="xl330" name="left_ankle_roll" joint="left_ankle_roll" inheritrange="1"/>
+    <motor class="xl330" name="head" joint="head"/>
+    <motor class="xl330" name="right_shoulder_pitch" joint="right_shoulder_pitch"/>
+    <motor class="xl330" name="right_shoulder_roll" joint="right_shoulder_roll"/>
+    <motor class="xl330" name="right_elbow" joint="right_elbow"/>
+    <motor class="xl330" name="right_hip_yaw" joint="right_hip_yaw"/>
+    <motor class="xl330" name="right_hip_roll" joint="right_hip_roll"/>
+    <motor class="xl330" name="right_hip_pitch" joint="right_hip_pitch"/>
+    <motor class="xl330" name="right_knee" joint="right_knee"/>
+    <motor class="xl330" name="right_ankle_pitch" joint="right_ankle_pitch"/>
+    <motor class="xl330" name="right_ankle_roll" joint="right_ankle_roll"/>
+    <motor class="xl330" name="left_shoulder_pitch" joint="left_shoulder_pitch"/>
+    <motor class="xl330" name="left_shoulder_roll" joint="left_shoulder_roll"/>
+    <motor class="xl330" name="left_elbow" joint="left_elbow"/>
+    <motor class="xl330" name="left_hip_yaw" joint="left_hip_yaw"/>
+    <motor class="xl330" name="left_hip_roll" joint="left_hip_roll"/>
+    <motor class="xl330" name="left_hip_pitch" joint="left_hip_pitch"/>
+    <motor class="xl330" name="left_knee" joint="left_knee"/>
+    <motor class="xl330" name="left_ankle_pitch" joint="left_ankle_pitch"/>
+    <motor class="xl330" name="left_ankle_roll" joint="left_ankle_roll"/>
   </actuator>
   <equality/>
 </mujoco>

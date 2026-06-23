@@ -18,8 +18,10 @@ from moves.walk import WalkMove
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run microban scheduler in MuJoCo simulation.")
     parser.add_argument("--hz", type=float, default=50.0, metavar="FREQ", help="Scheduler frequency in Hz (default: 50)")
-    parser.add_argument("--delay-motor", type=int, default=0, metavar="TICKS", help="Motor position/velocity read delay in ticks (default: 1 tick = 20 ms at 50 Hz)")
-    parser.add_argument("--delay-imu", type=int, default=0, metavar="TICKS", help="IMU gyro/quat read delay in ticks (default: 1 tick= 20 ms at 50 Hz)")
+    parser.add_argument("--delay-pos", type=int, default=3, metavar="TICKS", help="Motor position read delay in ticks (1 tick = 20 ms at 50 Hz)")
+    parser.add_argument("--delay-vel", type=int, default=3, metavar="TICKS", help="Motor velocity read delay in ticks")
+    parser.add_argument("--delay-gyro", type=int, default=4, metavar="TICKS", help="Gyro read delay in ticks")
+    parser.add_argument("--delay-quat", type=int, default=5, metavar="TICKS", help="Quaternion (projected gravity) read delay in ticks")
     args = parser.parse_args()
 
     input_source = MuJoCoInputSource(move_keys={"h": "head", "s": "squat", "v": "walk"})
@@ -27,8 +29,10 @@ def main() -> None:
         mjcf_path="src/model/mjcf/scene.xml",
         key_callback=input_source.key_callback,
         reset_source=input_source,
-        delay_motor_ticks=args.delay_motor,
-        delay_imu_ticks=args.delay_imu,
+        delay_pos_ticks=args.delay_pos,
+        delay_vel_ticks=args.delay_vel,
+        delay_gyro_ticks=args.delay_gyro,
+        delay_quat_ticks=args.delay_quat,
     )
     input_source.set_viewer_opt(controller.viewer_opt)
 

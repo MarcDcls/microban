@@ -1,4 +1,3 @@
-import math
 import time
 from collections import deque
 from collections.abc import Callable
@@ -11,7 +10,10 @@ import mujoco.viewer
 if TYPE_CHECKING:
     from sim.mujoco_input import MuJoCoInputSource
 
-from constants import MOTOR_TO_ID, ID_TO_MOTOR, NEUTRAL_POSE, KP_GAIN_PRM
+from bam.model import load_model as bam_load_model
+from bam.mujoco import MujocoController as BamController
+
+from constants import MOTOR_TO_ID, ID_TO_MOTOR, NEUTRAL_POSE, KP_DEFAULT, BAM_VIN, BAM_VOLTAGE_DROP_GAIN, BAM_VIN_MIN
 
 
 class _DelayBuffer:
@@ -35,8 +37,10 @@ class MuJoCoController:
         key_callback: Callable[[int, int, int, int], None] | None = None,
         stop_flag_path: str = "/tmp/microban_scheduler.stop",
         reset_source: "MuJoCoInputSource | None" = None,
-        delay_motor_ticks: int = 1,
-        delay_imu_ticks: int = 1,
+        delay_pos_ticks: int = 0,
+        delay_vel_ticks: int = 0,
+        delay_gyro_ticks: int = 0,
+        delay_quat_ticks: int = 0,
     ) -> None:
         self._stop_flag_path = Path(stop_flag_path)
         self._reset_source = reset_source
@@ -62,28 +66,40 @@ class MuJoCoController:
         self._last_torque_print = 0.0
 
         # Set initial pose to neutral so the robot starts upright
-        self._data.qpos[2] = 0.165 
+        self._data.qpos[2] = 0.165
         for name, angle in NEUTRAL_POSE.items():
             if name in self._name_to_qpos_idx:
                 self._data.qpos[self._name_to_qpos_idx[name]] = angle
-            if name in self._name_to_actuator_idx:
-                self._data.ctrl[self._name_to_actuator_idx[name]] = angle
         mujoco.mj_forward(self._model, self._data)
 
         # Delay buffers — simulate sensor/communication latency
         self._delay_pos = {
             mid: _DelayBuffer(
                 self._data.qpos[self._name_to_qpos_idx[ID_TO_MOTOR[mid]]],
-                delay_motor_ticks,
+                delay_pos_ticks,
             )
             for mid in MOTOR_TO_ID.values()
         }
         self._delay_vel = {
-            mid: _DelayBuffer(0.0, delay_motor_ticks)
+            mid: _DelayBuffer(0.0, delay_vel_ticks)
             for mid in MOTOR_TO_ID.values()
         }
-        self._delay_gyro = _DelayBuffer((0.0, 0.0, 0.0), delay_imu_ticks)
-        self._delay_quat = _DelayBuffer((1.0, 0.0, 0.0, 0.0), delay_imu_ticks)
+        self._delay_gyro = _DelayBuffer((0.0, 0.0, 0.0), delay_gyro_ticks)
+        self._delay_quat = _DelayBuffer((1.0, 0.0, 0.0, 0.0), delay_quat_ticks)
+
+        # BAM motor model — XL330 m6 (DC motor + Stribeck + load-dependent friction)
+        bam_model = bam_load_model(motor_name="xl330", model="m6")
+        bam_model.actuator.kp = KP_DEFAULT
+        bam_model.actuator.vin = BAM_VIN
+        self._bam = BamController(
+            bam_model, 
+            list(MOTOR_TO_ID.keys()), 
+            self._model, 
+            self._data,
+            vin_drop_gain=BAM_VOLTAGE_DROP_GAIN,
+            vin_min=BAM_VIN_MIN,
+        )
+        self._bam.reset(self._data.qpos)
 
         self._viewer = mujoco.viewer.launch_passive(
             self._model, self._data, key_callback=key_callback
@@ -98,24 +114,14 @@ class MuJoCoController:
         return self._viewer.opt
 
     def set_kp(self, kp: float) -> None:
-        """Set the same Kp on all actuators at once.
-        This function take Kp in register units and converts it in Nm/rad."""
-        kp_si = kp * KP_GAIN_PRM
-        self._model.actuator_gainprm[:, 0] = kp_si
-        self._model.actuator_biasprm[:, 1] = -kp_si
+        self._bam.model.actuator.kp = kp
 
     def sync_read_kp(self, ids: list[int]) -> list[int]:
-        return [
-            self._kp_to_register(int(float(self._model.actuator_gainprm[self._name_to_actuator_idx[ID_TO_MOTOR[motor_id]], 0]) / KP_GAIN_PRM))
-            for motor_id in ids
-        ]
+        kp = int(self._bam.model.actuator.kp)
+        return [kp] * len(ids)
 
     def sync_write_kp(self, ids: list[int], gains: list[int]) -> None:
-        for motor_id, gain in zip(ids, gains):
-            kp_si = gain * KP_GAIN_PRM
-            idx = self._name_to_actuator_idx[ID_TO_MOTOR[motor_id]]
-            self._model.actuator_gainprm[idx, 0] = kp_si
-            self._model.actuator_biasprm[idx, 1] = -kp_si
+        self._bam.model.actuator.kp = gains[0]
 
     def sync_write_torque_enable(self, ids: list[int], values: list[bool]) -> None:
         pass
@@ -129,10 +135,10 @@ class MuJoCoController:
             return
 
         for motor_id, pos in zip(ids, positions):
-            name = ID_TO_MOTOR[motor_id]
-            self._data.ctrl[self._name_to_actuator_idx[name]] = pos
+            self._bam.set_q_target(ID_TO_MOTOR[motor_id], pos)
 
         for _ in range(self._steps_per_tick):
+            self._bam.update()
             mujoco.mj_step(self._model, self._data)
 
         if self._reset_source is not None and self._reset_source.consume_reset():
@@ -221,7 +227,6 @@ class MuJoCoController:
         for name, angle in NEUTRAL_POSE.items():
             if name in self._name_to_qpos_idx:
                 self._data.qpos[self._name_to_qpos_idx[name]] = angle
-            if name in self._name_to_actuator_idx:
-                self._data.ctrl[self._name_to_actuator_idx[name]] = angle
         mujoco.mj_forward(self._model, self._data)
+        self._bam.reset(self._data.qpos)
         self._viewer.sync()
