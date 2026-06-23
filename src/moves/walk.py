@@ -11,6 +11,9 @@ from moves.move import MotorCommand, Move, MoveState
 # Note: requires to set observe_voltage = True in the Observer to log voltages
 LOGGING = False
 
+# Policy name
+AGENT_NAME = "walk_ref.onnx"
+
 
 class WalkMove(Move):
     """Walk using a RL policy trained in simulation."""
@@ -21,7 +24,7 @@ class WalkMove(Move):
         self._last_action = [0.0] * len(OBSERVATION_DOF_ORDER)
 
         # Load ONNX policy
-        self._ort_session = ort.InferenceSession("src/agents/walk.onnx")
+        self._ort_session = ort.InferenceSession(f"src/agents/{AGENT_NAME}")
 
         # Reference pose: read from ONNX metadata
         meta = self._ort_session.get_modelmeta().custom_metadata_map
