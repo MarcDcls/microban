@@ -1,7 +1,7 @@
 import onnxruntime as ort
 import numpy as np
 
-from constants import MOTOR_TO_ID, KP_DEFAULT, KP_RL, OBSERVATION_DOF_ORDER, NEUTRAL_POSE
+from constants import MOTOR_TO_ID, KP_DEFAULT, KP_RL, OBSERVATION_DOF_ORDER
 from controller import ControllerProtocol
 from observer import Observation
 from moves.move import MotorCommand, Move, MoveState
@@ -21,6 +21,12 @@ class WalkMove(Move):
 
         # Load ONNX policy
         self._ort_session = ort.InferenceSession("src/agents/walk.onnx")
+
+        # Reference pose: read from ONNX metadata
+        meta = self._ort_session.get_modelmeta().custom_metadata_map
+        names = meta["joint_names"].split(",")
+        positions = [float(v) for v in meta["default_joint_pos"].split(",")]
+        self._default_pose: dict[str, float] = dict(zip(names, positions))
 
         # Reference phase for gait cycle
         self._phase_step = 0
@@ -101,7 +107,7 @@ class WalkMove(Move):
 
         # Update command
         for i, name in enumerate(OBSERVATION_DOF_ORDER):
-            command.target_angles[name] = NEUTRAL_POSE[name] + action[i]
+            command.target_angles[name] = self._default_pose[name] + action[i]
 
         # Log positions and voltages
         if LOGGING:
@@ -119,7 +125,7 @@ class WalkMove(Move):
         
         # Motor positions
         for name in OBSERVATION_DOF_ORDER:
-            input_obs.append(obs.robot_state.motor_positions[name] - NEUTRAL_POSE[name])
+            input_obs.append(obs.robot_state.motor_positions[name] - self._default_pose[name])
         
         # Motor velocities
         for name in OBSERVATION_DOF_ORDER:

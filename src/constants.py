@@ -27,15 +27,15 @@ ID_TO_MOTOR = {v: k for k, v in MOTOR_TO_ID.items()}
 NEUTRAL_POSE = {
     "left_hip_yaw": float(np.deg2rad(0.0)),
     "left_hip_roll": float(np.deg2rad(5.0)),
-    # "left_hip_pitch": float(np.deg2rad(-5.0)),
-    "left_hip_pitch": float(np.deg2rad(0.0)),
+    "left_hip_pitch": float(np.deg2rad(-5.0)),
+    # "left_hip_pitch": float(np.deg2rad(0.0)),
     "left_knee": float(np.deg2rad(0.0)),
     "left_ankle_pitch": float(np.deg2rad(0.0)),
     "left_ankle_roll": float(np.deg2rad(-5.0)),
     "right_hip_yaw": float(np.deg2rad(0.0)),
     "right_hip_roll": float(np.deg2rad(-5.0)),
-    # "right_hip_pitch": float(np.deg2rad(-5.0)),
-    "right_hip_pitch": float(np.deg2rad(0.0)),
+    "right_hip_pitch": float(np.deg2rad(-5.0)),
+    # "right_hip_pitch": float(np.deg2rad(0.0)),
     "right_knee": float(np.deg2rad(0.0)),
     "right_ankle_pitch": float(np.deg2rad(0.0)),
     "right_ankle_roll": float(np.deg2rad(5.0)),
@@ -74,6 +74,11 @@ MOTOR_SIGN = {
 KP_DEFAULT: int = 400        # ~0.886 Nm/rad in MuJoCo
 KP_RL: int = 125             # ~0.277 Nm/rad in MuJoCo
 KP_GAIN_PRM: float = 0.0022  # Nm/rad per register unit (for Xl330)
+
+# BAM motor model (bam package, XL330 m6)
+BAM_VIN: float = 7.5  # XL330 nominal supply voltage (V)
+BAM_VIN_MIN: float = 4.8
+BAM_VOLTAGE_DROP_GAIN: float = 1.5
 
 # IMU (BMI088) I2C bus number on the Raspberry Pi
 IMU_I2C_BUS: int = 1
