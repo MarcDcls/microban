@@ -148,14 +148,16 @@ To increase the adhesion of the feet to the ground, you can add an optional laye
 
 The objective of this section is to assemble the torso of the robot. 
 
+<img width="100%" alt="image" src="https://github.com/user-attachments/assets/2539f053-079f-4133-9bd1-64700581052e" />
+
 <br>
 <br>
 
 For the assembly, you should refer to the [Onshape assembly](https://cad.onshape.com/documents/d424992a192a8ce34ffce163/v/7de3e6e40f0e1185d169e6d9/e/b34620a03cc3a684006c5867?renderMode=0&uiState=6a2fccab8e6d9214d2644ca7) to see how the parts fit together. 
 
-Arm routing ?
+Once the torso is assembled, you can fix it to the pelvis and connect the splitter cables to the hip yaw motors, shoulder pitch motors, and the Raspberry Pi hat.
 
-Splitter cable routing to explain / Fixing torso to pelvis.
+<img width="100%" alt="image" src="https://github.com/user-attachments/assets/b63c5cef-9b47-4408-8000-87cbec58fc34" />
 
 ---
 
