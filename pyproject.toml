@@ -10,11 +10,11 @@ dependencies = [
     "placo>=0.9.23",
     "pollen_bmi088_imu_library==1.0.0rc1",
     "rustypot>=1.4.2",
-    "bam",
 ]
 
 [dependency-groups]
 sim = [
+    "bam",
     "mujoco>=3.8.1",
 ]
 
@@ -24,4 +24,4 @@ override-dependencies = [
 ]
 
 [tool.uv.sources]
-bam = { git = "ssh://git@github.com/rhoban/bam", branch = "vin_rand" }
+bam = { git = "ssh://git@github.com/rhoban/bam", branch = "doc" }
