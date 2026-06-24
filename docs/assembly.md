@@ -148,24 +148,32 @@ To increase the adhesion of the feet to the ground, you can add an optional laye
 
 The objective of this section is to assemble the torso of the robot. 
 
+<img width="100%" alt="image" src="https://github.com/user-attachments/assets/2539f053-079f-4133-9bd1-64700581052e" />
+
 <br>
 <br>
 
 For the assembly, you should refer to the [Onshape assembly](https://cad.onshape.com/documents/d424992a192a8ce34ffce163/v/7de3e6e40f0e1185d169e6d9/e/b34620a03cc3a684006c5867?renderMode=0&uiState=6a2fccab8e6d9214d2644ca7) to see how the parts fit together. 
 
-Arm routing ?
+Once the torso is assembled, you can fix it to the pelvis and connect the splitter cables to the hip yaw motors, shoulder pitch motors, and the Raspberry Pi hat.
 
-Splitter cable routing to explain / Fixing torso to pelvis.
+<img width="100%" alt="image" src="https://github.com/user-attachments/assets/b63c5cef-9b47-4408-8000-87cbec58fc34" />
 
 ---
 
 ## 5. Electronics
 
-The objective of this section is to ...
+The objective of this section is to assemble the electronics of the robot, including the battery module and the trunk top. 
+
+The following schematic shows how the electronics are connected together. The battery module is composed of a 2S 18650 battery holder and a BMS board. It is connected to the trunk top with a xt30 connector. The trunk top contains the USB-C charger and the switch powering on the Raspberry Pi. The routing allows to charge the battery independently of the power state of the robot. The alimentation of the Raspberry Pi is done through one of the 2 JST EHR-4 connectors on the Raspberry Pi hat. 
 
 <img width="100%" alt="microban_elec" src="https://github.com/user-attachments/assets/39c3846d-ec3d-447d-befe-7f4e0d7e2ca3" />
 
 ### 5.1 Battery Module
+
+To assemble the battery module, first connect the 4.2V pin of the BMS to the metal contact on the battery holder, located on the side opposite the red (8.4V) and black (0V) wires. To make this easier, you can melt a small hole in the holder using your soldering iron to reach and solder the wire to the contact. Next, solder the positive (+) and negative (-) wires from the BMS to the XT30 connector. Once the wiring is complete, secure the BMS to the back of the battery holder using double-sided tape. Finally, apply hot glue to insulate all the connections and prevent any short circuits. The picture below shows the fully assembled battery module.
+
+
 
 ### 5.2 Trunk Top
 
