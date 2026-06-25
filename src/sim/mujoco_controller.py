@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 from bam.model import load_model as bam_load_model
 from bam.mujoco import MujocoController as BamController
 
-from constants import MOTOR_TO_ID, ID_TO_MOTOR, NEUTRAL_POSE, KP_DEFAULT, BAM_VIN, BAM_VOLTAGE_DROP_GAIN, BAM_VIN_MIN
+from constants import MOTOR_TO_ID, ID_TO_MOTOR, NEUTRAL_POSE, KP_DEFAULT, BAM_VIN, BAM_VOLTAGE_DROP_GAIN, BAM_VIN_MIN, BAM_MAX_CURRENT
 
 
 class _DelayBuffer:
@@ -114,12 +114,13 @@ class MuJoCoController:
         bam_model.actuator.kp = KP_DEFAULT
         bam_model.actuator.vin = BAM_VIN
         self._bam = BamController(
-            bam_model, 
-            list(MOTOR_TO_ID.keys()), 
-            self._model, 
+            bam_model,
+            list(MOTOR_TO_ID.keys()),
+            self._model,
             self._data,
             vin_drop_gain=BAM_VOLTAGE_DROP_GAIN,
             vin_min=BAM_VIN_MIN,
+            max_current=BAM_MAX_CURRENT,
         )
         self._bam.reset(self._data.qpos)
 

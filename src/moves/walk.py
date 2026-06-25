@@ -12,7 +12,7 @@ from moves.move import MotorCommand, Move, MoveState
 LOGGING = False
 
 # Policy name
-AGENT_NAME = "walk_lean_forward.onnx"
+AGENT_NAME = "walk.onnx"
 
 
 class WalkMove(Move):
