@@ -88,8 +88,10 @@ To reduce the length of the 180mm cables, you can cut them to the desired length
 
 First, cut the cable to the desired length. The end cut to the correct length should be stripped to expose the wires on 2mm, not more. While crimping the terminals, the first crimp will be done on the plastic part of the terminal to hold the wire in place, and the second crimp will be done on the metal part of the terminal to make the electrical connection. The details of the crimping process are presented in this [video](https://youtu.be/2hUjM0x_yfw).
 
-<img height="250px" alt="image958" src="https://github.com/user-attachments/assets/31fa1b7c-5757-465e-8c69-24e27dfedf70" />
-<img height="250px" alt="image940" src="https://github.com/user-attachments/assets/82b92448-4931-4d4c-bf3d-20253d7764bc" />
+<p align="center">
+  <img height="250px" alt="image958" src="https://github.com/user-attachments/assets/31fa1b7c-5757-465e-8c69-24e27dfedf70" />
+  <img height="250px" alt="image940" src="https://github.com/user-attachments/assets/82b92448-4931-4d4c-bf3d-20253d7764bc" />
+</p>
 
 <br>
 <br>
@@ -105,7 +107,9 @@ Finally, you can insert the 3 crimped terminals into the plastic housing. The or
 
 The objective of this section is to assemble the legs of the robot and fix them to the pelvis. 
 
-<img width="100%" alt="image" src="https://github.com/user-attachments/assets/e3254867-ebaf-4d84-9591-d567e8b5ae8d" />
+<p align="center">
+  <img width="80%" alt="image" src="https://github.com/user-attachments/assets/e3254867-ebaf-4d84-9591-d567e8b5ae8d" />
+</p>
 
 <br>
 <br>
@@ -118,28 +122,36 @@ For the double-motor blocks used in the ankle and hip joints of the robot, you s
 
 Cable routing before sliding the motors into the double-motor block (do not forget the spacer):
 
-<img width="100%" alt="image" src="https://github.com/user-attachments/assets/ff3f5251-780d-4131-92e5-6077fda5364f" />
+<p align="center">
+  <img width="80%" alt="image" src="https://github.com/user-attachments/assets/ff3f5251-780d-4131-92e5-6077fda5364f" />
+</p>
 
 <br>
 <br>
 
 Result after sliding the motors into the double-motor block:
 
-<img height="300px" alt="image" src="https://github.com/user-attachments/assets/516b395e-33f1-4191-89f8-fbd971a374ba" />
-<img height="300px" alt="image" src="https://github.com/user-attachments/assets/6550922b-200f-4813-9464-048147ae67f7" />
+<p align="center">
+  <img height="300px" alt="image" src="https://github.com/user-attachments/assets/516b395e-33f1-4191-89f8-fbd971a374ba" />
+  <img height="300px" alt="image" src="https://github.com/user-attachments/assets/6550922b-200f-4813-9464-048147ae67f7" />
+</p>
 
 ### 3.2 Cable Routing 
 
 For the cable lengths, refers to the [Cable Setup](#2-cable-setup) section. You should use the cable sockets on the tibia, femur and hip double-motor blocks to route the cables through the robot. 
 For the tibia and femur routing, you can check the first image of the section. For the hip double-motor block, you can check the image below. 
 
-<img width="100%" alt="image" src="https://github.com/user-attachments/assets/1f9419be-4711-42d0-bb36-5c9a4933c496" />
+<p align="center">
+  <img width="80%" alt="image" src="https://github.com/user-attachments/assets/1f9419be-4711-42d0-bb36-5c9a4933c496" />
+</p>
 
 ### 3.3 Feet Adhesion
 
 To increase the adhesion of the feet to the ground, you can add an optional layer of rubber on the bottom of the feet. You can use a rubber sheet or cut a piece of an old cycling tire. 
 
-<img width="100%" alt="image" src="https://github.com/user-attachments/assets/85b68480-c078-4cdb-8431-d062476647ee" />
+<p align="center">
+  <img width="80%" alt="image" src="https://github.com/user-attachments/assets/85b68480-c078-4cdb-8431-d062476647ee" />
+</p>
 
 
 ---
@@ -148,7 +160,9 @@ To increase the adhesion of the feet to the ground, you can add an optional laye
 
 The objective of this section is to assemble the torso of the robot. 
 
-<img width="100%" alt="image" src="https://github.com/user-attachments/assets/2539f053-079f-4133-9bd1-64700581052e" />
+<p align="center">
+  <img width="80%" alt="image" src="https://github.com/user-attachments/assets/2539f053-079f-4133-9bd1-64700581052e" />
+</p>
 
 <br>
 <br>
@@ -157,7 +171,9 @@ For the assembly, you should refer to the [Onshape assembly](https://cad.onshape
 
 Once the torso is assembled, you can fix it to the pelvis and connect the splitter cables to the hip yaw motors, shoulder pitch motors, and the Raspberry Pi hat.
 
-<img width="100%" alt="image" src="https://github.com/user-attachments/assets/b63c5cef-9b47-4408-8000-87cbec58fc34" />
+<p align="center">
+  <img width="80%" alt="image" src="https://github.com/user-attachments/assets/b63c5cef-9b47-4408-8000-87cbec58fc34" />
+</p>
 
 ---
 
@@ -171,12 +187,22 @@ The following schematic shows how the electronics are connected together. The ba
 
 ### 5.1 Battery Module
 
-To assemble the battery module, first connect the 4.2V pin of the BMS to the metal contact on the battery holder, located on the side opposite the red (8.4V) and black (0V) wires. To make this easier, you can melt a small hole in the holder using your soldering iron to reach and solder the wire to the contact. Next, solder the positive (+) and negative (-) wires from the BMS to the XT30 connector. Once the wiring is complete, secure the BMS to the back of the battery holder using double-sided tape. Finally, apply hot glue to insulate all the connections and prevent any short circuits. The picture below shows the fully assembled battery module.
+To assemble the battery module, first connect the 4.2V pin of the BMS to the metal contact on the battery holder, located on the side opposite the red (8.4V) and black (0V) wires. To make this easier, you can melt a small hole in the holder using your soldering iron to reach and solder the wire to the contact. Next, solder the positive (+) and negative (-) wires from the BMS to the XT30 connector. Once the wiring is complete, secure the BMS to the back of the battery holder using double-sided tape. Finally, apply hot glue to insulate all the connections and prevent any short circuits. The pictures below show the fully assembled battery module.
 
-
+<p align="center">
+  <img height="280px" alt="image" src="https://github.com/user-attachments/assets/810e1c1f-ad19-48c4-8fac-5c869f9a7651" />
+  <img height="280px" alt="image" src="https://github.com/user-attachments/assets/54a14540-d09d-4527-a8b7-8b936ca0c0c4" />
+</p>
 
 ### 5.2 Trunk Top
+
+
 
 ## 6. Final Assembly
 
 Connect the cable, slide the battery module in
+
+<p align="center">
+  <img height="450px" alt="image" src="https://github.com/user-attachments/assets/b142e3ef-d1d4-4421-8a69-0b8b8bfef6f2" />
+  <img height="450px" alt="image" src="https://github.com/user-attachments/assets/125cc2f3-b8af-479b-90ab-a38f1be22028" />
+</p>
