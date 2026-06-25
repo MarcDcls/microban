@@ -199,7 +199,7 @@ The picture below shows the result of the wiring process.
   <img width="60%" alt="image" src="https://github.com/user-attachments/assets/24028ff2-4bd2-4be3-9f0e-d7b23aa124b9" />
 </p>
 
-Important: Because the trunk top is printed in PLA (which is sensitive to heat), make sure to solder the USB-C charger module before mounting it to the plastic part. Also, once the wiring is complete, you should isolate the connections with hot glue to prevent any short circuits.
+*Important:* Because the trunk top is printed in PLA (which is sensitive to heat), make sure to solder the USB-C charger module before mounting it to the plastic part. Also, once the wiring is complete, you should isolate the connections with hot glue to prevent any short circuits.
 
 ## 6. Final Assembly
 
@@ -208,6 +208,10 @@ To finalize the assembly of the robot, you just have to slide the battery module
 <p align="center">
   <img height="450px" alt="image" src="https://github.com/user-attachments/assets/b142e3ef-d1d4-4421-8a69-0b8b8bfef6f2" />
   <img height="450px" alt="image" src="https://github.com/user-attachments/assets/125cc2f3-b8af-479b-90ab-a38f1be22028" />
+</p>
+
+<p align="center">
+  <img width="40%" alt="WhatsApp Image 2026-06-25 at 18 08 36" src="https://github.com/user-attachments/assets/4dfc1bee-20c1-46d2-b9ea-ea9a8bea072b" />
 </p>
 
 If you have followed all the steps of this guide, your robot should be fully assembled and ready to be powered on. You can now proceed to the [Deployment Guide](deployment.md) to deploy the software on the Raspberry Pi and start controlling your Microban robot!
