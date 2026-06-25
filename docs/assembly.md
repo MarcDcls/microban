@@ -93,9 +93,6 @@ First, cut the cable to the desired length. The end cut to the correct length sh
   <img height="250px" alt="image940" src="https://github.com/user-attachments/assets/82b92448-4931-4d4c-bf3d-20253d7764bc" />
 </p>
 
-<br>
-<br>
-
 Once the 3 end terminals are crimped, you need to retrieve the plastic housing from the second half of the cable. You can do this by rising the plastic stops on the housing with a small screwdriver and pulling the housing out. If you have trouble with this step, here is another [video](https://youtu.be/mWsNwO4s6kE) showing how to do it. 
 
 Finally, you can insert the 3 crimped terminals into the plastic housing. The order of the wires is important, so make sure to insert them in their corresponding position. Here is a last [video](https://youtu.be/w1A9wdLn3Ro) showing how to insert the terminals into the housing.
@@ -111,9 +108,6 @@ The objective of this section is to assemble the legs of the robot and fix them 
   <img width="80%" alt="image" src="https://github.com/user-attachments/assets/e3254867-ebaf-4d84-9591-d567e8b5ae8d" />
 </p>
 
-<br>
-<br>
-
 For the assembly, you should refer to the [Onshape assembly](https://cad.onshape.com/documents/d424992a192a8ce34ffce163/v/7de3e6e40f0e1185d169e6d9/e/b34620a03cc3a684006c5867?renderMode=0&uiState=6a2fccab8e6d9214d2644ca7) to see how the parts fit together. Nevertheless, some parts of the assembly require specific instructions and are detailed in the following sub-sections.
 
 ### 3.1 Double-Motor Blocks
@@ -125,9 +119,6 @@ Cable routing before sliding the motors into the double-motor block (do not forg
 <p align="center">
   <img width="80%" alt="image" src="https://github.com/user-attachments/assets/ff3f5251-780d-4131-92e5-6077fda5364f" />
 </p>
-
-<br>
-<br>
 
 Result after sliding the motors into the double-motor block:
 
@@ -153,7 +144,6 @@ To increase the adhesion of the feet to the ground, you can add an optional laye
   <img width="80%" alt="image" src="https://github.com/user-attachments/assets/85b68480-c078-4cdb-8431-d062476647ee" />
 </p>
 
-
 ---
 
 ## 4. Torso Assembly
@@ -163,9 +153,6 @@ The objective of this section is to assemble the torso of the robot.
 <p align="center">
   <img width="80%" alt="image" src="https://github.com/user-attachments/assets/2539f053-079f-4133-9bd1-64700581052e" />
 </p>
-
-<br>
-<br>
 
 For the assembly, you should refer to the [Onshape assembly](https://cad.onshape.com/documents/d424992a192a8ce34ffce163/v/7de3e6e40f0e1185d169e6d9/e/b34620a03cc3a684006c5867?renderMode=0&uiState=6a2fccab8e6d9214d2644ca7) to see how the parts fit together. 
 
@@ -196,28 +183,23 @@ To assemble the battery module, first connect the 4.2V pin of the BMS to the met
 
 ### 5.2 Trunk Top
 
-**1. Switch Installation**
+First, insert the switch into the trunk top. Using pliers, carefully fold its pins down to free up some vertical space.
 
-Insert the switch into the trunk top. Using pliers, carefully fold its pins down to free up some vertical space.
+Next, prepare the JST EHR-4 power cable for the Raspberry Pi hat. Cut a Dynamixel cable to a length of approximately 150mm and remove the two unused wires. Refer to the picture below to see which wires to keep.
 
-**2. Cable Preparation**
+<p align="center">
+  <img width="35%" alt="image" src="https://github.com/user-attachments/assets/e1dc34b5-98df-4ee1-861e-6f42cfd46f67" />
+</p>
 
-Prepare the JST EHR-4 power cable for the Raspberry Pi hat. Cut a Dynamixel cable to a length of approximately 150mm and remove the two unused wires. Refer to the picture below to see which wires to keep.
+To wire the components, start by soldering the USB-C charger to the XT30 connector, which will be used to connect the battery module. Next, wire the switch by soldering the charger's **BAT** pin to one of its terminals, and the **VIN** wire of the JST EHR-4 cable to the other. Finally, complete the circuit by soldering the **GND** wire of the JST EHR-4 cable directly to the **GND** pin of the USB-C charger. 
 
-**3. Soldering**
-
-*Important: Because the trunk top is printed in PLA (which is sensitive to heat), make sure to solder the USB-C charger module before mounting it to the plastic part.* 
-
-To wire the components, start by soldering the USB-C charger to the XT30 connector, which will be used to connect the battery module. Next, wire the switch by soldering the charger's BAT pin to one of its terminals, and the VIN wire of the JST EHR-4 cable to the other. Finally, complete the circuit by soldering the GND wire of the JST EHR-4 cable directly to the GND pin of the USB-C charger. The picture below shows the result of the wiring process.
+The picture below shows the result of the wiring process.
 
 <p align="center">
   <img width="60%" alt="image" src="https://github.com/user-attachments/assets/24028ff2-4bd2-4be3-9f0e-d7b23aa124b9" />
 </p>
 
-<br>
-<br>
-
-*Important: Once the wiring is complete, you should isolate the connections with hot glue to prevent any short circuits.* 
+Important: Because the trunk top is printed in PLA (which is sensitive to heat), make sure to solder the USB-C charger module before mounting it to the plastic part. Also, once the wiring is complete, you should isolate the connections with hot glue to prevent any short circuits.
 
 ## 6. Final Assembly
 
