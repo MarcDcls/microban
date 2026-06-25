@@ -208,8 +208,13 @@ class MuJoCoController:
         ))
 
     def sync_read_present_current(self, ids: list[int]) -> list[float]:
-        # Overcurrent safety targets the real BMS; no current model in sim.
-        return [0.0] * len(ids)
+        # Motor current from the torque applied by the bam model: I = torque / kt.
+        # ctrl holds the (current-clipped) torque set in MujocoController.update().
+        kt = self._bam.model.kt.value
+        return [
+            float(self._data.ctrl[self._name_to_actuator_idx[ID_TO_MOTOR[mid]]] / kt)
+            for mid in ids
+        ]
 
     def sync_read_present_input_voltage(self, ids: list[int]) -> list[float]:
         return [80.0] * len(ids)
