@@ -99,6 +99,14 @@ PROXY_MAX_PWM: float = 1.0               # max duty cycle magnitude
 PROXY_KP: int = KP_RL                    # firmware P gain assumed by the proxy (walking regime)
 OVERCURRENT_PROXY_DELAY_TICKS: int = 3   # number of ticks to delay the proxy current estimate
 
+# Velocity command limits [m/s, m/s, rad/s], applied centrally to every input source.
+# Input sources emit normalized commands in [-1, 1]; scale_velocity() maps them to these.
+# Rotation gets a wider range when turning in place (vx = vy = 0) than while translating.
+VX_MAX: float = 0.7
+VY_MAX: float = 0.3
+VTHETA_MAX_STATIONARY: float = 3.0
+VTHETA_MAX_MOVING: float = 1.5
+
 # IMU (BMI088) I2C bus number on the Raspberry Pi
 IMU_I2C_BUS: int = 1
 

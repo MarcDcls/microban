@@ -21,7 +21,7 @@ from constants import (
 from controller import ControllerProtocol
 from imu_reader import imu_quat_to_body
 from observer import Observer, Observation
-from input.input_source import InputSource, UserInput
+from input.input_source import InputSource, UserInput, scale_velocity
 from moves.move import MotorCommand, Move, MoveState
 from moves.rotate_head import RotateHeadMove
 from moves.squat import SquatMove
@@ -91,6 +91,7 @@ class Scheduler:
 
                 robot_state.time_s = start_time - self.loop_start_time
                 user_input = self.input_source.read() if self.input_source else UserInput()
+                user_input.velocity = scale_velocity(user_input.velocity)
                 obs = Observation(robot_state=robot_state, user_input=user_input)
 
                 imu_status_getter = getattr(self.controller, "get_imu_status", None)
