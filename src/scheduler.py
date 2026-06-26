@@ -1,10 +1,23 @@
 import time
 import math
+from collections import deque
 from pathlib import Path
 from typing import Optional
 
 
-from constants import MOTOR_TO_ID, OVERCURRENT_CUTOFF_A, OVERCURRENT_DEBOUNCE_TICKS
+from constants import (
+    MOTOR_TO_ID,
+    BAM_MAX_CURRENT,
+    OVERCURRENT_CUTOFF_A,
+    OVERCURRENT_DEBOUNCE_TICKS,
+    OVERCURRENT_PROXY_DELAY_TICKS,
+    PROXY_KT,
+    PROXY_R,
+    PROXY_VIN,
+    PROXY_ERROR_GAIN,
+    PROXY_MAX_PWM,
+    PROXY_KP,
+)
 from controller import ControllerProtocol
 from imu_reader import imu_quat_to_body
 from observer import Observer, Observation
@@ -44,6 +57,9 @@ class Scheduler:
         self._last_imu_print_s: float = 0.0
         self._last_imu_stale_warn_s: float = 0.0
         self._overcurrent_ticks = 0
+        # History of sent target_angles, to align the current proxy with the delayed feedback:
+        # the oldest entry is the command issued OVERCURRENT_PROXY_DELAY_TICKS ticks ago.
+        self._cmd_history: deque[dict[str, float]] = deque(maxlen=OVERCURRENT_PROXY_DELAY_TICKS + 1)
 
     def run(self):
         print(f"Starting control loop at {1 / self.dt:.1f} Hz", end="\r\n", flush=True)
@@ -72,10 +88,6 @@ class Scheduler:
                     print(f"Warning: serial read error (attempt {self._serial_errors}/3): {e}", end="\r\n", flush=True)
                     continue
                 self._serial_errors = 0
-
-                # Overcurrent safety: cut the robot before a current spike trips the BMS
-                if self._check_overcurrent(robot_state):
-                    break
 
                 robot_state.time_s = start_time - self.loop_start_time
                 user_input = self.input_source.read() if self.input_source else UserInput()
@@ -106,7 +118,17 @@ class Scheduler:
                     elif move.state == MoveState.STOPPING:
                         move.on_stop(obs, command)
 
+                # Overcurrent safety: estimate the current from the command that was actually
+                # active when the (delayed) position/velocity feedback was sampled — the oldest
+                # buffered command (== DELAY_TICKS old once full). This reconstructs the real
+                # (delayed) current instead of pairing a fresh target with stale feedback, which
+                # would inflate the error term and false-trigger at gait start.
+                aligned_targets = self._cmd_history[0] if self._cmd_history else command.target_angles
+                if self._check_overcurrent(robot_state, aligned_targets):
+                    break
+
                 # Send command to motors
+                self._cmd_history.append(dict(command.target_angles))
                 self._send_to_motors(command)
 
                 # IMU / gyro terminal display
@@ -170,18 +192,44 @@ class Scheduler:
         if self.stop_flag_path.exists():
             self.stop_flag_path.unlink()
 
-    def _check_overcurrent(self, robot_state) -> bool:
-        """Track the summed |present_current| over all motors and report when it stays
-        above OVERCURRENT_CUTOFF_A for OVERCURRENT_DEBOUNCE_TICKS consecutive ticks.
+    def _estimate_total_current(self, robot_state, target_angles: dict[str, float]) -> float:
+        """Estimate the total pack current [A] from whichever signal is available.
+
+        - If present_current was read (Observer.observe_current = True), use the measured
+          sum of |current| over all motors.
+        - Otherwise, fall back to the bam XL330 m6 current proxy (no extra bus read), from
+          the (delay-aligned) command target, present_position and present_velocity:
+            duty = clip(PROXY_KP * PROXY_ERROR_GAIN * (target - q), ±PROXY_MAX_PWM)
+            I    = (PROXY_VIN * duty - PROXY_KT * dq) / PROXY_R, |I| capped at BAM_MAX_CURRENT
+          The back-EMF term (PROXY_KT * dq) keeps the estimate low when the motor is moving
+          toward an overshot RL target, while still flagging stalled motors (low dq, high error).
+        """
+        currents = robot_state.motor_currents
+        if currents:
+            return sum(abs(c) for c in currents.values())
+
+        positions = robot_state.motor_positions
+        velocities = robot_state.motor_velocities
+        total = 0.0
+        for name, target in target_angles.items():
+            pos = positions.get(name)
+            if pos is None:
+                continue
+            dq = velocities.get(name, 0.0)
+            duty = PROXY_KP * PROXY_ERROR_GAIN * (target - pos)
+            duty = max(-PROXY_MAX_PWM, min(PROXY_MAX_PWM, duty))
+            current = (PROXY_VIN * duty - PROXY_KT * dq) / PROXY_R
+            total += min(abs(current), BAM_MAX_CURRENT)
+        return total
+
+    def _check_overcurrent(self, robot_state, target_angles: dict[str, float]) -> bool:
+        """Report when the estimated total pack current stays above OVERCURRENT_CUTOFF_A
+        for OVERCURRENT_DEBOUNCE_TICKS consecutive ticks.
 
         When True, the run loop breaks and _cleanup() disables torque on every motor,
         leaving the robot compliant so the BMS does not trip on the current spike.
         """
-        currents = robot_state.motor_currents
-        if not currents:
-            return False
-
-        total_current = sum(abs(c) for c in currents.values())
+        total_current = self._estimate_total_current(robot_state, target_angles)
         if total_current >= OVERCURRENT_CUTOFF_A:
             self._overcurrent_ticks += 1
         else:

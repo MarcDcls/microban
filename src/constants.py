@@ -27,13 +27,13 @@ ID_TO_MOTOR = {v: k for k, v in MOTOR_TO_ID.items()}
 NEUTRAL_POSE = {
     "left_hip_yaw": float(np.deg2rad(0.0)),
     "left_hip_roll": float(np.deg2rad(5.0)),
-    "left_hip_pitch": float(np.deg2rad(0.0)),
+    "left_hip_pitch": float(np.deg2rad(-10.0)),
     "left_knee": float(np.deg2rad(0.0)),
     "left_ankle_pitch": float(np.deg2rad(0.0)),
     "left_ankle_roll": float(np.deg2rad(-5.0)),
     "right_hip_yaw": float(np.deg2rad(0.0)),
     "right_hip_roll": float(np.deg2rad(-5.0)),
-    "right_hip_pitch": float(np.deg2rad(0.0)),
+    "right_hip_pitch": float(np.deg2rad(-10.0)),
     "right_knee": float(np.deg2rad(0.0)),
     "right_ankle_pitch": float(np.deg2rad(0.0)),
     "right_ankle_roll": float(np.deg2rad(5.0)),
@@ -47,13 +47,13 @@ NEUTRAL_POSE = {
 }
 
 MOTOR_SIGN = {
-    "left_hip_yaw": 1.0,
+    "left_hip_yaw": -1.0,
     "left_hip_roll": 1.0,
     "left_hip_pitch": -1.0,
     "left_knee": 1.0,
     "left_ankle_pitch": 1.0,
     "left_ankle_roll": -1.0,
-    "right_hip_yaw": 1.0,
+    "right_hip_yaw": -1.0,
     "right_hip_roll": 1.0,
     "right_hip_pitch": 1.0,
     "right_knee": -1.0,
@@ -83,8 +83,21 @@ BAM_MAX_CURRENT: float = 1.75 # XL330 firmware current limit [A]: clips motor to
 # motors stays above OVERCURRENT_CUTOFF_A for OVERCURRENT_DEBOUNCE_TICKS consecutive ticks.
 # Goal: cut the robot before a current spike (e.g. all motors snapping during a fall) trips the BMS.
 PRESENT_CURRENT_UNIT_A: float = 0.001   # XL330 present_current register unit (1.0 mA/LSB)
-OVERCURRENT_CUTOFF_A: float = 10.0      # total pack current threshold (CALIBRATE: below BMS trip, above normal walk peak)
+OVERCURRENT_CUTOFF_A: float = 15.0      # total pack current threshold (CALIBRATE: below BMS trip, above normal walk peak)
 OVERCURRENT_DEBOUNCE_TICKS: int = 2     # consecutive over-threshold ticks before cutting
+
+# Current proxy used when present_current is NOT read (Observer.observe_current = False), so the
+# safety needs no extra bus transaction. Reproduces the bam XL330 m6 voltage-controlled model from
+# data already read (present_position, present_velocity) and the command target:
+#   duty = clip(PROXY_KP * PROXY_ERROR_GAIN * (target - q), ±PROXY_MAX_PWM)
+#   I    = (PROXY_VIN * duty - PROXY_KT * dq) / PROXY_R      then |I| capped at BAM_MAX_CURRENT
+PROXY_KT: float = 0.366                  # XL330 m6 torque constant [Nm/A]
+PROXY_R: float = 2.811                   # XL330 m6 motor resistance [Ohm]
+PROXY_VIN: float = BAM_VIN               # supply voltage [V]
+PROXY_ERROR_GAIN: float = 0.0028773775   # duty cycle per (kp * rad), XL330 encoder/gain scaling
+PROXY_MAX_PWM: float = 1.0               # max duty cycle magnitude
+PROXY_KP: int = KP_RL                    # firmware P gain assumed by the proxy (walking regime)
+OVERCURRENT_PROXY_DELAY_TICKS: int = 3   # number of ticks to delay the proxy current estimate
 
 # IMU (BMI088) I2C bus number on the Raspberry Pi
 IMU_I2C_BUS: int = 1

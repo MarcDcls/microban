@@ -3,7 +3,7 @@ import numpy as np
 import os
 from pathlib import Path
 
-from constants import MOTOR_TO_ID, NEUTRAL_POSE
+from constants import MOTOR_TO_ID, NEUTRAL_POSE, KP_DEFAULT
 from robot_controller import RobotController
 from scheduler import Scheduler
 from input.keyboard_input import KeyboardInputSource
@@ -41,6 +41,7 @@ def main() -> None:
     motor_ids = list(MOTOR_TO_ID.values())
     controller.sync_write_torque_enable(motor_ids, [True] * len(motor_ids))
     controller.sync_write_status_return_level(motor_ids, [1] * len(motor_ids))
+    controller.sync_write_kp(motor_ids, [KP_DEFAULT] * len(motor_ids))
 
     try:
         ramp_to_neutral(controller)
