@@ -98,3 +98,13 @@ EOF
 ```
 
 Reboot the Pi with `sudo reboot`.
+
+Install uv, the Python package manager, on the Pi. First, set the date:
+```
+sudo date -s "2026-06-27 12:21:00"
+```
+
+Then, run:
+```
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
