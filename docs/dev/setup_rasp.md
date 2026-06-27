@@ -62,7 +62,7 @@ Now you can connect to the Pi without entering a password!
 
 Copy the configuration file to the Pi. From your computer, run:
 ```
-scp docs/config.txt microban:config.txt
+scp docs/dev/config.txt microban:config.txt
 ```
 
 Then, on the Pi, move the configuration file to the correct location:
