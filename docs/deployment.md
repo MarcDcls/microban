@@ -120,27 +120,57 @@ ssh user@microban.local
 Once you are successfully connected via SSH, change the default password and,
 optionally, customize the hostname.
 
-1. **Change the password** — run the password tool and follow the prompts:
-   ```bash
-   passwd
-   ```
+### Change the password
 
-2. **Change the hostname (optional)** — rename your robot so it no longer answers to
-   `microban` on the network:
-   ```bash
-   sudo hostnamectl set-hostname NEW_ROBOT_NAME
-   ```
-   Then update the hosts file to match:
-   ```bash
-   sudo nano /etc/hosts
-   ```
-   Find the line containing `microban` (usually the second line) and replace it with
-   your `NEW_ROBOT_NAME`. Save and exit (Ctrl+O, Enter, Ctrl+X).
+Run the password tool and follow the prompts:
+```bash
+passwd
+```
 
-3. **Reboot** to apply the changes:
-   ```bash
-   sudo reboot
-   ```
+### Change the username (optional)
+
+The image ships with the user `user`. A logged-in account cannot be renamed, so create
+a temporary admin account, rename from there, then remove it. Replace `NEW_USER` with
+your choice.
+
+From the default `user` session, create a temporary admin and set its password:
+```bash
+sudo useradd -m -s /bin/bash -G sudo tmpadmin
+sudo passwd tmpadmin
+```
+Log out, reconnect as `tmpadmin`, then rename the original account:
+```bash
+ssh tmpadmin@<ROBOT_IP>
+sudo usermod -l NEW_USER -d /home/NEW_USER -m user
+sudo groupmod -n NEW_USER user      # rename its primary group too
+```
+Log out, reconnect as `NEW_USER`, and delete the temporary account:
+```bash
+ssh NEW_USER@<ROBOT_IP>
+sudo userdel -r tmpadmin
+```
+The shutdown-without-password rule still works (it targets the `sudo` group, not a
+name). Remember to update the `User` field in your `~/.ssh/config` (Step 5).
+
+### Change the hostname (optional)
+
+Rename your robot so it no longer answers to `microban` on the network:
+```bash
+sudo hostnamectl set-hostname NEW_ROBOT_NAME
+```
+Then update the hosts file to match:
+```bash
+sudo nano /etc/hosts
+```
+Find the line containing `microban` (usually the second line) and replace it with your
+`NEW_ROBOT_NAME`. Save and exit (Ctrl+O, Enter, Ctrl+X).
+
+### Reboot
+
+Apply the changes:
+```bash
+sudo reboot
+```
 
 Your robot is now secured and discoverable at `<YOUR_USER>@<ROBOT_NAME>.local`.
 
