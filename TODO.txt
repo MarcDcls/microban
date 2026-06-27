@@ -1,5 +1,0 @@
-- remove password need to shutdown
-- create a clone SD with no Rhoban wifi and no /media/[PC_USER]/rootfs/etc/NetworkManager/system-connections/telephone.nmconnection
-
-Documentation:
-- Finalize installation instructions
