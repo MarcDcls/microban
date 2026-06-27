@@ -4,6 +4,10 @@ This guide covers day-to-day operation once the robot has been set up (see the
 [Deployment Guide](deployment.md)). You drive the robot from your computer with the
 `Makefile`, which talks to the Pi over SSH.
 
+> [!IMPORTANT]
+> Always run `make shutdown` before cutting power to the robot. This is **not**
+> automatic — powering off the Pi without a clean shutdown can corrupt the SD card.
+
 ## Makefile commands
 
 Run these from the repository root on your computer. They target the host `microban`
