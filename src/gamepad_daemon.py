@@ -154,14 +154,19 @@ def main() -> None:
     print("microban gamepad daemon started", flush=True)
     while True:
         path = wait_for_gamepad()
-        if not wait_for_action(path) == "launch":
+        action = wait_for_action(path)
+
+        if action == "disconnect":
             print("Gamepad disconnected while armed", flush=True)
             continue
+        if action == "shutdown":
+            power_off()
+            return
+        # action == "launch"
         if session_running():
             print("A control loop is already running — ignoring launch", flush=True)
             continue
         run_session()
-        
 
 
 if __name__ == "__main__":

@@ -57,15 +57,20 @@ gamepad automatically when one is connected, and falls back to the keyboard othe
 ## Headless gamepad mode (no SSH)
 
 An optional service lets you run the robot **without any terminal**: once the
-controller is connected to the Pi, **hold START for 2 s** to start the control loop,
-and press **B** to stop it. It coexists with `make run` (only one control loop runs at a
-time).
+controller is connected to the Pi:
+- **Hold START for 2 s** → start the control loop.
+- **B** → stop it.
+- **Hold BACK for 2 s** → power off the Pi cleanly.
+
+It coexists with `make run` (only one control loop runs at a time).
 
 Enable it (opt-in) from your computer:
 ```bash
 make gamepad-headless-enable     # installs + starts the service on the Pi
 make gamepad-headless-disable    # removes it
 ```
+Once enabled it **persists across reboots** (the robot comes back in headless mode on
+every power-on) until you run `make gamepad-headless-disable`.
 
 Behavior while a headless session runs:
 - **Wi‑Fi is turned off** to free the 2.4 GHz antenna for Bluetooth (fewer controller

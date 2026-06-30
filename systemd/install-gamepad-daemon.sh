@@ -7,7 +7,7 @@
 set -euo pipefail
 
 UNIT=/etc/systemd/system/microban-gamepad.service
-SUDOERS=/etc/sudoers.d/020_microban-rfkill
+SUDOERS=/etc/sudoers.d/020_microban-headless
 
 if [[ "${1:-}" == "--uninstall" ]]; then
     systemctl disable --now microban-gamepad.service 2>/dev/null || true
@@ -21,9 +21,10 @@ fi
 USER_NAME=${SUDO_USER:-$(whoami)}
 REPO=$(cd "$(dirname "$0")/.." && pwd)
 
-# Let the daemon (running as $USER_NAME, in the sudo group) toggle Wi-Fi without a password.
+# Let the daemon (running as $USER_NAME, in the sudo group) toggle Wi-Fi and power off
+# without a password (Wi-Fi off during a session; BACK held 2s = shutdown).
 cat > "$SUDOERS" <<EOF
-%sudo ALL=(root) NOPASSWD: /usr/sbin/rfkill block wifi, /usr/sbin/rfkill unblock wifi
+%sudo ALL=(root) NOPASSWD: /usr/sbin/rfkill block wifi, /usr/sbin/rfkill unblock wifi, /usr/sbin/shutdown
 EOF
 chmod 440 "$SUDOERS"
 visudo -cf "$SUDOERS"
@@ -50,4 +51,5 @@ EOF
 systemctl daemon-reload
 systemctl enable --now microban-gamepad.service
 echo "Headless gamepad service installed and started (user=$USER_NAME, repo=$REPO)."
-echo "Connect the controller and hold START 2s to launch; press B to stop."
+echo "Connect the controller, then: hold START 2s to launch, B to stop, BACK 2s to power off."
+echo "It stays enabled across reboots until 'make gamepad-headless-disable'."
