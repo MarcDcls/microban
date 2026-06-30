@@ -9,9 +9,9 @@
   <img height="380px" alt="image" src="https://github.com/user-attachments/assets/11ab24f1-ea60-4219-8a92-078d78795115" />
 <p\>
   
-Welcome to the **Microban** project! **This repository is currently under development**, so I advise you to wait for the 1.0 release before attempting to build your own robot. One of the major issue with building the robot currently is the **lack of off-the-shelf hat for the Raspberry Pi Zero 2W**. The custom hat will be available in the 1.0 release. In the meantime, feel free to explore the documentation and the CAD files, and stay tuned for updates on the project.
+Welcome to the **Microban** project! 
 
-Microban is a \~30cm tall, fully open-source humanoid robot designed specifically for makers, students, and robotics enthusiasts. The core philosophy behind this project is accessibility: the total cost of the robot is kept relatively low (\~$550), all components are 3D-printable or easily sourced, and the assembly process is guided with detailed instructions. This means that anyone with a standard desktop 3D printer and a few basic tools should be able to build their own Microban from scratch.
+Microban is a \~30cm tall, fully open-source humanoid robot designed specifically for makers, students, and robotics enthusiasts. The core philosophy behind this project is accessibility: the total cost of the robot is kept relatively low ($550-$600), all components are 3D-printable or easily sourced, and the assembly process is guided with detailed instructions. This means that anyone with a standard desktop 3D printer and a few basic tools should be able to build their own Microban from scratch.
 
 The idea behind Microban is to provide a platform for learning and experimentation in robotics. By making the design open-source, users are encouraged to modify, improve, and share their own versions of the robot. Whether you're interested in programming, mechanical design, or electronics, Microban offers a hands-on experience that can help you develop your skills in a fun and engaging way.
 
@@ -33,7 +33,7 @@ Here is a quick overview of what is in the robot:
 | **3D Printed Parts** | ~30 | Check the CAD files. Recommended material is PLA. |
 | **Servo Motors** | 19 | Dynamixel XL330-M288-T servomotor. |
 | **Microcontroller**| 1 | Raspberry Pi Zero 2W. |
-| **Board Hat** | 1 | Pollen custom hat for Raspberry Pi Zero 2W |
+| **Board Hat** | 1 | Pollen RPI Robot Hat for Raspberry Pi Zero 2W |
 | **Power Supply** | 2 | 18650 3.7V Lithium-ion Batteries. |
 | **Battery Holder** | 1 | 2x18650 Battery Holder. |
 | **USB-C Charger** | 1 | Standard USB-C charger. |

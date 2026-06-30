@@ -2,9 +2,11 @@
 
 Here is a detailed Bill of Materials (BOM) for the project, including links to purchase each component and their approximate prices. Please note that prices may vary based on location and availability. You can source the components from your preferred suppliers, but beware that for electronic components using cheaper distributors may result in lower quality and reliability. 
 
-At the time of writing, **a Microban robot costs approximately $547**.
+Unlike the other components, the **[RPI Robot Hat](https://github.com/pollen-robotics/elec_RPI_Robot_HAT)** is not an off-the-shelf part: it is an open-source board that you need to have manufactured. Its design files are freely available on GitHub and can be ordered from any PCB fabrication service (e.g. JLCPCB, PCBWay, Aisler). The listed price is a rough estimate and will depend on the fab you choose and the quantity ordered. 
 
-If you also include the configuration tools (Dynamixel U2D2 and U2D2 Power Hub), the total cost rises to approximately $603.
+At the time of writing, **a Microban robot costs approximately $567**.
+
+If you also include the configuration tools (Dynamixel U2D2 and U2D2 Power Hub), the total cost rises to approximately $623.
 
 
 ## Robot Components
@@ -19,7 +21,7 @@ To build a complete Microban robot, you will need the following components:
 | Charger | <img width="517" height="355" alt="image" src="https://github.com/user-attachments/assets/7c87ae54-b69d-45ce-b1f4-3c94d7554002" /> | 1 | ~$10.00 | [Amazon](https://www.amazon.fr/gp/product/B0BWTK7SVN/ref=ox_sc_act_title_1?smid=A25R4KS2AL1P7J&psc=1) | Standard USB-C charger. |
 | Batteries | <img width="291" height="119" alt="image" src="https://github.com/user-attachments/assets/01e57659-3c0d-4490-8d46-2c5ae151940b" /> | 2 | ~$4.00 each | [Nkon](https://www.nkon.nl/fr/sony-murata-us18650-vtc6.html) | 18650 3.7V Lithium-ion Batteries. Murata VTC6 are recommended but not mandatory. |
 | Raspberry Pi Zero 2W | <img width="515" height="353" alt="image" src="https://github.com/user-attachments/assets/8d1380e7-ee46-45aa-ac96-b55b4dadb0cb" /> | 1 | ~$15.00 | [Raspberry Pi](https://www.raspberrypi.com/products/raspberry-pi-zero-2-w/) | Microcontroller for the robot. |
-| Pollen Custom Hat | <img width="1274" height="871" alt="image" src="https://github.com/user-attachments/assets/0a297b9a-a445-46f9-9fb0-f91548307426" /> | 1 | ~$10.00 | INCOMING | Custom hat for Raspberry Pi Zero 2W from Pollen Robotics. |
+| RPI Robot Hat | <img width="1274" height="871" alt="image" src="https://github.com/user-attachments/assets/0a297b9a-a445-46f9-9fb0-f91548307426" /> | 1 | ~$30.00 | [GitHub](https://github.com/pollen-robotics/elec_RPI_Robot_HAT) | Open-source custom hat for the Raspberry Pi Zero 2W. The design files are available on GitHub and can be manufactured by any PCB fabrication service. |
 | 16GB+ micro SD card | <img width="246" height="183" alt="image" src="https://github.com/user-attachments/assets/7a2fe517-e3e7-47b6-9966-2838ed620ccf" /> | 1 | ~$10.00 | [Amazon](https://www.amazon.fr/-/en/SanDisk-microSDHC-Adapter-Performance-SDSQUA4-032G-GN6MA/dp/B08GY9NYRM/ref=sr_1_17?crid=O5SONJ8M41FU&dib=eyJ2IjoiMSJ9.N0O0ZyTK7SFmwPAxWOn5oeL2zSZluRXIFYtW-yyCkbLOIGtmYKqAPjoPCPBBKT2SqTnXVN_WUlEtRtDlz-_T8GwlCS5fb_56nVvy2k3sVqmcfNSx8D4P8ZLnG2v_-ijJd2iwtGph-uaNffLic3eoBQ-Ks1PzmkL-A2pBKleoOFnBmbfTwADpYnJ78lN066Tm-P0Lo1Z5oZEfncC1pAX_077dIlD8jRriZXfAj4hwWTt8YUl7D5ZjTC2Y_SjsMnUKdIgrt7p4KVKrUfQaPdknL6krTdBaYQlN0Hofl_miVUA.qN2mUVBbFdJp9tIHCuN-ttjj-TfpmDhS2Erb25sFB-I&dib_tag=se&keywords=sandisk%2BA1%2B16gb%2Bmicro%2Bsd&qid=1781699284&s=computers&sprefix=sandisk%2Ba1%2B16gb%2Bmicro%2Bs%2Ccomputers%2C141&sr=1-17&th=1) | Class 10 micro SD card of at least 16GB for OS and software. |
 | Dynamixel XL330-M288-T | <img width="241" height="288" alt="image" src="https://github.com/user-attachments/assets/703ab319-5651-41da-a37b-81ff1c046413" /> | 19 | $23.90 each | [Robotis](https://en.robotis.com/shop_en/item.php?it_id=902-0163-000) | Servomotor with 1 motor, 1 180mm cable, 10 2.2x8 screws, 6 2x6 screws. |
 | M2x6 STP39 Screws | <img width="248" height="153" alt="image" src="https://github.com/user-attachments/assets/26d87e70-0839-470f-9a63-286f6c794f57" /> | 10 | ~$3 (depends on quantity) | [Screwerk](https://de.screwerk.com/fr/shop/detail/stp/STP390200060S.html) | Screws for the motor horns. Self-tapping screws for plastic. Complete the screws from motor kits. |

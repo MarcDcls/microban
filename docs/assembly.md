@@ -156,7 +156,7 @@ The objective of this section is to assemble the torso of the robot.
 
 For the assembly, you should refer to the [Onshape assembly](https://cad.onshape.com/documents/d424992a192a8ce34ffce163/v/7de3e6e40f0e1185d169e6d9/e/b34620a03cc3a684006c5867?renderMode=0&uiState=6a2fccab8e6d9214d2644ca7) to see how the parts fit together. 
 
-Once the torso is assembled, you can fix it to the pelvis and connect the splitter cables to the hip yaw motors, shoulder pitch motors, and the Raspberry Pi hat.
+Once the torso is assembled, you can fix it to the pelvis and connect the splitter cables to the hip yaw motors, shoulder pitch motors, and the RPI Robot Hat.
 
 <p align="center">
   <img width="80%" alt="image" src="https://github.com/user-attachments/assets/b63c5cef-9b47-4408-8000-87cbec58fc34" />
@@ -168,7 +168,7 @@ Once the torso is assembled, you can fix it to the pelvis and connect the splitt
 
 The objective of this section is to assemble the electronics of the robot, including the battery module and the trunk top. 
 
-The following schematic shows how the electronics are connected together. The battery module is composed of a 2S 18650 battery holder and a BMS board. It is connected to the trunk top with a xt30 connector. The trunk top contains the USB-C charger and the switch powering on the Raspberry Pi. The routing allows to charge the battery independently of the power state of the robot. The alimentation of the Raspberry Pi is done through one of the 2 JST EHR-4 connectors on the Raspberry Pi hat. 
+The following schematic shows how the electronics are connected together. The battery module is composed of a 2S 18650 battery holder and a BMS board. It is connected to the trunk top with a xt30 connector. The trunk top contains the USB-C charger and the switch powering on the Raspberry Pi. The routing allows to charge the battery independently of the power state of the robot. The alimentation of the Raspberry Pi is done through one of the 2 JST EHR-4 connectors on the RPI Robot Hat. 
 
 <img width="100%" alt="microban_elec" src="https://github.com/user-attachments/assets/39c3846d-ec3d-447d-befe-7f4e0d7e2ca3" />
 
@@ -185,7 +185,7 @@ To assemble the battery module, first connect the 4.2V pin of the BMS to the met
 
 First, insert the switch into the trunk top. Using pliers, carefully fold its pins down to free up some vertical space.
 
-Next, prepare the JST EHR-4 power cable for the Raspberry Pi hat. Cut a Dynamixel cable to a length of approximately 150mm and remove the two unused wires. Refer to the picture below to see which wires to keep.
+Next, prepare the JST EHR-4 power cable for the RPI Robot Hat. Cut a Dynamixel cable to a length of approximately 150mm and remove the two unused wires. Refer to the picture below to see which wires to keep.
 
 <p align="center">
   <img width="35%" alt="image" src="https://github.com/user-attachments/assets/e1dc34b5-98df-4ee1-861e-6f42cfd46f67" />
@@ -203,7 +203,7 @@ The picture below shows the result of the wiring process.
 
 ## 6. Final Assembly
 
-To finalize the assembly of the robot, you just have to slide the battery module into the trunk, connect its XT30 connector to the trunk top, connect the JST EHR-4 cable to the Raspberry Pi hat, and close the trunk with the trunk top. 
+To finalize the assembly of the robot, you just have to slide the battery module into the trunk, connect its XT30 connector to the trunk top, connect the JST EHR-4 cable to the RPI Robot Hat, and close the trunk with the trunk top. 
 
 <p align="center">
   <img height="450px" alt="image" src="https://github.com/user-attachments/assets/b142e3ef-d1d4-4421-8a69-0b8b8bfef6f2" />
