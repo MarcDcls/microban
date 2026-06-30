@@ -1,39 +1,6 @@
 # Cloning the SD card
 
-This produces the distributable `microban.img.xz`. Do the **one-time setup** once on
-the master card, then the **depersonalization** and **imaging** steps every time you
-cut a new image.
-
-## One-time setup: SSH host-key regeneration
-
-A distributed image must not ship with fixed SSH host keys — otherwise every robot
-flashed from it shares the same keys (a security risk, and SSH host-key conflicts when
-two robots run on the same network). We remove the keys before imaging (see below) and
-let each robot regenerate its own on first boot.
-
-Raspberry Pi OS already ships `sshd-keygen.service`, but it only runs when
-`ConditionFirstBoot=yes` (i.e. `/etc/machine-id` is empty). Add a more robust service,
-triggered by the **absence of host keys**, so they always regenerate when missing.
-
-On the Pi (`ssh microban`):
-```bash
-sudo tee /etc/systemd/system/regen-ssh-host-keys.service >/dev/null <<'EOF'
-[Unit]
-Description=Regenerate SSH host keys if missing
-Before=ssh.service ssh.socket sshd.service
-ConditionPathExists=!/etc/ssh/ssh_host_ed25519_key
-
-[Service]
-Type=oneshot
-RemainAfterExit=yes
-ExecStart=/usr/bin/ssh-keygen -A
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-sudo systemctl enable regen-ssh-host-keys.service
-```
+This produces the distributable `microban.img.xz`. Do the **depersonalization** and **imaging** steps every time you cut a new image.
 
 ## Depersonalize before each clone
 
@@ -49,6 +16,13 @@ sudo rm -f "$R"/etc/ssh/ssh_host_*
 
 # machine-id — regenerated on first boot; ensures unique DHCP identity / IP per robot
 sudo truncate -s 0 "$R/etc/machine-id"
+
+# cloud-init instance state — clears the "already configured" flag so the user's
+# network-config (Wi-Fi) is actually applied on their first boot. Without this,
+# cloud-init treats the image as already set up and IGNORES network-config edits, so
+# the robot never joins the user's network. (Equivalent to `cloud-init clean` on the Pi.)
+sudo rm -rf "$R"/var/lib/cloud/instances/* "$R"/var/lib/cloud/instance \
+            "$R"/var/lib/cloud/sem/* "$R"/var/lib/cloud/data/*
 
 # Your Wi-Fi credentials (if any NetworkManager connection was created)
 sudo rm -f "$R"/etc/NetworkManager/system-connections/*.nmconnection

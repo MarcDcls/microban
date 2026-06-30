@@ -86,6 +86,10 @@ Save and exit (Ctrl + O, then Enter, then Ctrl + X).
 
 Safely eject the card from your Ubuntu PC, insert it into the Raspberry Pi Zero 2W, and power it up.
 
+> **Changing the Wi-Fi networks later:** just edit `network-config` again — on the Pi,
+> or offline with the SD card in your PC — and reboot. The robot detects the change at
+> boot and re-applies it automatically (it resets cloud-init and reboots once). 
+
 ## Step 3: First SSH Connection
 
 Give the Raspberry Pi about 1 to 2 minutes on its very first boot. It will automatically resize the file system to use the full capacity of your SD card and then connect to your Wi-Fi network. Do not power it off during this process, as it may take a while and interrupting it could cause issues.

@@ -108,3 +108,131 @@ Then, run:
 ```
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
+
+
+## SSH host-key regeneration
+
+A distributed image must not ship with fixed SSH host keys — otherwise every robot
+flashed from it shares the same keys (a security risk, and SSH host-key conflicts when
+two robots run on the same network). We remove the keys before imaging (see below) and
+let each robot regenerate its own on first boot.
+
+Raspberry Pi OS already ships `sshd-keygen.service`, but it only runs when
+`ConditionFirstBoot=yes` (i.e. `/etc/machine-id` is empty). Add a more robust service,
+triggered by the **absence of host keys**, so they always regenerate when missing.
+
+On the Pi (`ssh microban`):
+```bash
+sudo tee /etc/systemd/system/regen-ssh-host-keys.service >/dev/null <<'EOF'
+[Unit]
+Description=Regenerate SSH host keys if missing
+Before=ssh.service ssh.socket sshd.service
+ConditionPathExists=!/etc/ssh/ssh_host_ed25519_key
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/ssh-keygen -A
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo systemctl enable regen-ssh-host-keys.service
+```
+
+## Wi-Fi re-application on change
+
+`network-config` is read by cloud-init **only on the first boot**. So once a robot has
+booted, editing `network-config` to switch Wi-Fi networks has no effect unless cloud-init
+is reset. This service detects a changed `network-config` at boot and re-applies it
+automatically, so a user can switch networks fully offline — edit `network-config` on the
+SD card, boot, done — with no SSH or prior network access.
+
+On the Pi (`ssh microban`):
+```bash
+sudo tee /usr/local/bin/microban-netcfg-reapply >/dev/null <<'EOF'
+#!/bin/bash
+# Re-apply /boot/firmware/network-config when it changes, by resetting cloud-init.
+set -u
+
+CFG=/boot/firmware/network-config
+STAMP=/var/lib/microban/netcfg.sha256
+
+[ -f "$CFG" ] || exit 0
+mkdir -p "$(dirname "$STAMP")"
+
+new=$(sha256sum "$CFG" | awk '{print $1}')
+old=$(cat "$STAMP" 2>/dev/null || true)
+
+if [ -z "$old" ]; then
+    # First run: cloud-init already applied this config this boot. Just record it.
+    echo "$new" > "$STAMP"
+    exit 0
+fi
+
+if [ "$new" != "$old" ]; then
+    # Config changed: record it, reset cloud-init, and reboot so cloud-init
+    # re-applies the new network-config on the next boot.
+    echo "$new" > "$STAMP"
+    /usr/bin/cloud-init clean --logs
+    /usr/sbin/reboot
+fi
+EOF
+sudo chmod 755 /usr/local/bin/microban-netcfg-reapply
+
+sudo tee /etc/systemd/system/microban-netcfg-reapply.service >/dev/null <<'EOF'
+[Unit]
+Description=Re-apply network-config (reset cloud-init) when it changes
+After=cloud-final.service
+ConditionPathExists=/boot/firmware/network-config
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/microban-netcfg-reapply
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo systemctl enable microban-netcfg-reapply.service
+```
+
+## Serial console off, motor UART on fix
+
+The Dynamixel motors are driven over the UART (`/dev/ttyAMA0`, 1 Mbps). The serial
+**login console** must be **disabled** on that UART, otherwise the kernel and a getty
+spew bytes onto the bus and the motors return checksum errors / stop responding. The
+UART **hardware** must stay **enabled**.
+
+⚠️ Setting this with `raspi-config` is **not enough on its own**: this image is driven
+by cloud-init, whose `user-data` contains `rpi.interfaces.serial`. If it is set to
+`true`, cloud-init **re-enables the serial console** every time it runs as a new
+instance — which happens on every `cloud-init clean`, including the one the
+`microban-netcfg-reapply` service triggers on a Wi-Fi change. So a raspi-config tweak
+gets silently reverted and the motors break again.
+
+Fix it at the source. Edit `/boot/firmware/user-data` and set the granular form
+(console off, hardware on):
+```yaml
+rpi:
+  interfaces:
+    serial:
+      console: false
+      hardware: true
+```
+Validate the file, then apply it cleanly:
+```bash
+sudo cloud-init schema -c /boot/firmware/user-data   # must report "Valid schema"
+sudo cloud-init clean && sudo reboot
+```
+After reboot, confirm `/proc/cmdline` no longer contains `console=ttyAMA0` and that the
+motors answer (`rustypot_wizard` at 1 Mbps sees all 19 IDs). This config survives every
+cloud-init re-run, so the motors stay reachable.
+
+> If cloud-init rejects the granular form on your version, the fallback is to remove the
+> `rpi.interfaces.serial` line entirely (cloud-init then leaves the serial alone) — the
+> UART stays on via `enable_uart=1` in `config.txt`, and you disable the console once
+> with `raspi-config` (Interface Options → Serial Port → login shell: No, hardware: Yes).
+
+
