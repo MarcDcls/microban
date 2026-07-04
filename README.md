@@ -8,7 +8,7 @@
   <img height="380px" alt="image" src="https://github.com/user-attachments/assets/e7bc975c-ab70-4ce5-a882-225468f9ffff" />
   <img height="380px" alt="image" src="https://github.com/user-attachments/assets/df0143d0-566d-44a4-a285-8507b6c01a19" />
   <img height="380px" alt="image" src="https://github.com/user-attachments/assets/11ab24f1-ea60-4219-8a92-078d78795115" />
-<p\>
+</p>
   
 Welcome to the **Microban** project! 
 
@@ -17,7 +17,7 @@ Microban is a \~30cm tall humanoid robot designed specifically for makers, stude
 The idea behind Microban is to provide a platform for learning and experimentation in robotics. By making the design open, users are encouraged to modify, improve, and share their own versions of the robot. Whether you're interested in programming, mechanical design, or electronics, Microban offers a hands-on experience that can help you develop your skills in a fun and engaging way.
 
 The main features of Microban are:
-*   🤖 **100% Open-Source**: Mechanics, 3D models, and documentation are entirely free to use and modify.
+*   🤖 **100% Open-Design**: Mechanics, 3D models, and documentation are entirely free to use and modify.
 *   🔧 **DIY & Maker Friendly**: Guided assembly instructions, fully 3D-printable parts and cheap components.
 *   📏 **Compact Size**: Microban is only 30cm tall and can be recharged via USB-C, making it the perfect desktop companion for robotics experimentation.
 
@@ -111,7 +111,7 @@ If you use Microban in your research, please cite it as follows:
     author = {Duclusaud, Marc},
     doi = {10.5281/zenodo.20784789},
     month = jun,
-    title = {{Microban: A Compact, Fully 3D-Printable Open-Source Humanoid Robot}},
+    title = {{Microban: A Compact, Fully 3D-Printable Humanoid Robot}},
     url = {https://github.com/MarcDcls/microban},
     howpublished = "\url{https://github.com/MarcDcls/microban}",
     version = {0.0.1},
@@ -123,5 +123,5 @@ If you use Microban in your research, please cite it as follows:
 
 <p align="center">
   <img width="100%" alt="image" src="https://github.com/user-attachments/assets/f944db1b-b324-4915-a785-72229313eb72" />
-<p\>
+</p>
   
