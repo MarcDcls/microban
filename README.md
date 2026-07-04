@@ -114,7 +114,7 @@ If you use Microban in your research, please cite it as follows:
     title = {{Microban: A Compact, Fully 3D-Printable Humanoid Robot}},
     url = {https://github.com/MarcDcls/microban},
     howpublished = "\url{https://github.com/MarcDcls/microban}",
-    version = {0.0.1},
+    version = {1.0.0},
     year = {2026}
 }
 ```
