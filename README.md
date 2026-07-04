@@ -89,7 +89,7 @@ This project uses a dual-licensing model to keep the project open for the commun
 * **Hardware & Documentation (CAD, STL, Docs):** Licensed under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).
 * **Software (Source Code):** Licensed under [GNU GPL v3](https://www.gnu.org/licenses/gpl-3.0.html).
 
-### 💡 TL;DR (Simplified Summary)
+To summarize the licenses:
 
 * **Hobbyists, Makers & Researchers:** You are **100% free** to download, 3D-print, build, modify, and hack Microban for your personal, educational, or academic research use. If you share your modifications, you must release them under the same licenses.
 * **Commercial Entities & Companies:** You **cannot** sell this robot, sell parts/kits, or use this hardware/software design in commercial products without prior explicit written permission.
@@ -102,7 +102,7 @@ For licensing terms, commercial partnerships, or inquiries, please reach out to 
 
 ---
 
-## Citation
+## 📚 Citation
 
 If you use Microban in your research, please cite it as follows:
 
